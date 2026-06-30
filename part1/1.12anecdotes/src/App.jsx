@@ -1,5 +1,17 @@
 import { useState } from 'react';
 
+
+
+const Button = ({setSelected, anecdotes}) => {
+  const getRandomInt = (max) => Math.floor(Math.random() * max);
+  const setRandomAnecdote = () => setSelected(getRandomInt(anecdotes.length));
+  return (
+    <div>
+      <button onClick={() => setRandomAnecdote()}>Random Quote</button>
+    </div>
+  );
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -10,14 +22,16 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
-  ]
-   ;
+  ];
   const [selected, setSelected] = useState(0);
 
   return (
-    <div>
-      {anecdotes[selected]}
-    </div>
+    <>
+      <div>
+        {anecdotes[selected]}
+      </div>
+      <Button setSelected={setSelected} anecdotes={anecdotes} />
+    </>
   );
 };
 
