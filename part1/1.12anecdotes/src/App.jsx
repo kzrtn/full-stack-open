@@ -4,7 +4,6 @@ const VoteButton = ({anecdotesObj, setAnecdotesObj, selected}) => {
   const AddVote = () => {
     const newAnecdotesObj = anecdotesObj.map((anecdote, index) =>
       index === selected ? {...anecdote, votes: anecdote.votes + 1} : anecdote);
-    
     setAnecdotesObj(newAnecdotesObj);
   }
 
@@ -16,7 +15,6 @@ const VoteButton = ({anecdotesObj, setAnecdotesObj, selected}) => {
 };
 
 const NextButton = ({selected, setSelected, anecdotesObj}) => {
-
   // Well, it's not really random but... stops the program looking like it crashed
   // because it so happened to roll the same anecdote as currently shown
   const getRandomInt = (max) => {
@@ -63,14 +61,38 @@ const App = () => {
 
   return (
     <>
-      <div>
-        {anecdotesObj[selected].quote}
-        <p>has {anecdotesObj[selected].votes} votes</p>
-      </div>
+      <Display header="Anecdote of the day" anecdotesObj={anecdotesObj} selected={selected} />
       <VoteButton anecdotesObj={anecdotesObj}  setAnecdotesObj={setAnecdotesObj} selected={selected}/>
       <NextButton anecdotesObj={anecdotesObj}  setSelected={setSelected} selected={selected} />
+      <Display header="Anecdote with most votes" anecdotesObj={anecdotesObj} selected={MostVotes(anecdotesObj)}/>
     </>
   );
+};
+
+const Display = ({header, anecdotesObj, selected}) => {
+  return (
+    <div>
+        <h1>{header}</h1>
+        {anecdotesObj[selected].quote}
+        <p>has {anecdotesObj[selected].votes} votes</p>
+    </div>
+  );
+};
+
+const MostVotes = (anecdotesObj) => {
+  let highestVote = {
+    index: 0,
+    anecdote: "",
+    votes: 0
+  };
+  
+  anecdotesObj.forEach((element, index) => {
+    if (highestVote.votes < element.votes) {
+      highestVote = element;
+      highestVote.index = index;
+    }
+  });
+  return highestVote.index;
 };
 
 export default App;
