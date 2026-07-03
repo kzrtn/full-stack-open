@@ -1,28 +1,35 @@
 {
-  "persons":[
-    { 
-      "name": "Arto Hellas", 
+  "persons": [
+    {
+      "name": "Arto Hellas",
       "number": "040-123456",
       "visible": true,
       "id": "1"
     },
-    { 
-      "name": "Ada Lovelace", 
+    {
+      "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "visible": true,
       "id": "2"
     },
-    { 
-      "name": "Dan Abramov", 
+    {
+      "name": "Dan Abramov",
       "number": "12-43-234345",
       "visible": true,
       "id": "3"
     },
-    { 
-      "name": "Mary Poppendieck", 
+    {
+      "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "visible": true,
       "id": "4"
+    },
+    {
+      "name": "John Smith",
+      "number": "123345567",
+      "visible": true,
+      "id": "iB6qEe9mNS8"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

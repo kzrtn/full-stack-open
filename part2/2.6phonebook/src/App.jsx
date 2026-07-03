@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 
+import personService from './services/persons'
 import { PersonForm } from './components/PersonForm'
 import { Contact } from './components/Contact'
 import { Filter } from './components/Filter'
@@ -8,29 +8,17 @@ import { Filter } from './components/Filter'
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
-  const [newPhone, setNewPhone] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
+  // Load initial people from server
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-  })
+    personService.getAll().then(initialPeople => setPersons(initialPeople))
+  }, [])
 
   const states = {
-    person: {
-      persons: persons,
-      setPersons: setPersons
-    },
-    name: {
-      newName: newName,
-      setNewName: setNewName
-    },
-    phone: {
-      newPhone: newPhone,
-      setNewPhone: setNewPhone
-    }
+    person: { persons, setPersons },
+    name: { newName, setNewName },
+    number: { newNumber, setNewNumber }
   }
 
   return (

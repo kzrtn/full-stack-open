@@ -1,6 +1,8 @@
+import personService from '../services/persons'
+
 export const PersonForm = ({states}) => {
   const inputboxName = (e) => states.name.setNewName(e.target.value)
-  const inputboxPhone = (e) => states.phone.setNewPhone(e.target.value)
+  const inputboxPhone = (e) => states.number.setNewNumber(e.target.value)
 
   const PersonAlreadyExists = (name) => {
     const filterPerson = states.person.persons.filter((obj) => obj.name === name)
@@ -13,14 +15,16 @@ export const PersonForm = ({states}) => {
     if (!PersonAlreadyExists(states.name.newName)) {
       const newPerson = {
         name: states.name.newName,
-        phone: states.phone.newPhone,
+        number: states.number.newNumber,
         visible: true
       }
 
-      states.person.setPersons([
-        ...states.person.persons,
-        newPerson
-      ])
+      personService
+        .create(newPerson)
+        .then(returnedPerson => {
+          states.person.setPersons(states.person.persons.concat(returnedPerson))
+        })
+
     } else {
       alert(`${newName} is already added to phonebook`)
     }
