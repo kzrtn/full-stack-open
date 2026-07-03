@@ -23,12 +23,6 @@
       "number": "39-23-6423122",
       "visible": true,
       "id": "4"
-    },
-    {
-      "name": "John Smith",
-      "number": "123345567",
-      "visible": true,
-      "id": "iB6qEe9mNS8"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
