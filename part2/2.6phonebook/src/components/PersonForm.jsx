@@ -26,7 +26,7 @@ export const PersonForm = ({states}) => {
         })
 
     } else {
-      alert(`${newName} is already added to phonebook`)
+      alert(`${states.name.newName} is already added to phonebook`)
     }
   }
   

@@ -23,6 +23,12 @@
       "number": "39-23-6423122",
       "visible": true,
       "id": "4"
+    },
+    {
+      "name": "Ana Vasconcelos",
+      "number": "962879410",
+      "visible": true,
+      "id": "RO8ZUitTztc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

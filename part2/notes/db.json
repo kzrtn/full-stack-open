@@ -8,7 +8,7 @@
     {
       "id": "2",
       "content": "Browser can execute only JavaScript",
-      "important": false
+      "important": true
     },
     {
       "id": "3",
@@ -19,11 +19,6 @@
       "id": "F_ivnwcCaRc",
       "content": "This is a test",
       "important": false
-    },
-    {
-      "id": "90YociNY9aI",
-      "content": "All of these things are so hard to remember. I feel incompetent",
-      "important": true
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
