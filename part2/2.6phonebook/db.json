@@ -29,6 +29,12 @@
       "number": "962879410",
       "visible": true,
       "id": "RO8ZUitTztc"
+    },
+    {
+      "name": "test person",
+      "number": "1234567",
+      "visible": true,
+      "id": "Xntggz1Ql3k"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

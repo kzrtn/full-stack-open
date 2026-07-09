@@ -12,7 +12,9 @@ const App = () => {
 
   // Load initial people from server
   useEffect(() => {
-    personService.getAll().then(initialPeople => setPersons(initialPeople))
+    personService
+      .getAll()
+      .then(initialPeople => setPersons(initialPeople))
   }, [])
 
   const states = {
