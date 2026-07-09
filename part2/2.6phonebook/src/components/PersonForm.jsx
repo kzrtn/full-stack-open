@@ -17,7 +17,6 @@ export const PersonForm = ({states}) => {
     }
 
     const searchResult = searchForPerson(newPerson.name)
-    const isNewNumber = hasNewNumber(searchResult[0].number, newPerson.number)
 
     if (!searchResult.length) {
       //Person's name is entirely new
@@ -26,7 +25,10 @@ export const PersonForm = ({states}) => {
         .then(returnedPerson => {
           states.person.setPersons(states.person.persons.concat(returnedPerson))
         })
-    } else if (searchResult.length && isNewNumber) {
+      states.notif.setNotif(`Added ${newPerson.name}`)
+      setTimeout(() => states.notif.setNotif(null), 5000)
+
+    } else if (searchResult.length && hasNewNumber(searchResult[0].number, newPerson.number)) {
       //Person's name exists, but their phone number is different
       if(window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)) {
         personService
@@ -37,6 +39,8 @@ export const PersonForm = ({states}) => {
                 person.name === returnedPerson.name ? returnedPerson : person)
             )
           })
+          states.notif.setNotif(`Updated ${newPerson.name}'s phone number`)
+          setTimeout(() => states.notif.setNotif(null), 5000)
       }
     } else if (searchResult.length) {
       //Person's name and their phone number exists

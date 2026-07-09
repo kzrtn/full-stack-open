@@ -35,6 +35,12 @@
       "number": "1234567",
       "visible": true,
       "id": "Xntggz1Ql3k"
+    },
+    {
+      "name": "test",
+      "number": "1234",
+      "visible": true,
+      "id": "Flo96_YItZU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
