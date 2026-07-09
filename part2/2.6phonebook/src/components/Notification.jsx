@@ -1,5 +1,5 @@
-export const Notification = ({message}) => {
-  const notificationStyle = {
+export const Notification = ({message, isError}) => {
+  let notificationStyle = {
     color: 'green',
     background: 'lightgrey',
     fontSize: '20px',
@@ -7,6 +7,13 @@ export const Notification = ({message}) => {
     borderRadius: '5px',
     padding: '10px',
     marginBottom: '10px'
+  }
+
+  if (isError) {
+    notificationStyle = {
+      ...notificationStyle,
+      color: 'red'
+    }
   }
 
   if (message) {

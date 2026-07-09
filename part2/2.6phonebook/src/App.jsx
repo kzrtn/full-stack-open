@@ -10,7 +10,10 @@ const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [newNotif, setNotif] = useState(null)
+  const [newNotif, setNotif] = useState({
+    isError: false,
+    message: null
+  })
 
   // Load initial people from server
   useEffect(() => {
@@ -29,12 +32,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={newNotif} />
+      <Notification message={newNotif.message} isError={newNotif.isError} />
       <Filter states={states} />
       <h2>Add new number</h2>
       <PersonForm states={states} />
       <h2>Numbers</h2>
-      <Contact states={states.person} />
+      <Contact states={states} />
     </div>
   )
 }
