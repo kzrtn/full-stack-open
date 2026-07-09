@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Note from './components/Note'
 import noteService from './services/notes'
 
@@ -19,7 +18,7 @@ const App = () => {
   const notesToShow = showAll ? notes : notes.filter(note => note.important == true)
 
   const toggleImportanceOf = id => {
-    const url = `http://localhost:3001/notes/${id}`
+    //const url = `http://localhost:3001/notes/${id}`
     const note = notes.find(n => n.id === id)
     const changedNote = {...note, important: !note.important}
 
@@ -30,7 +29,7 @@ const App = () => {
     })
       .catch(error => {
         alert(
-          `Note '${note.content}' was already deleted from the server`
+          `Note '${note.content}' was already deleted from the server: ${error}`
         )
         setNotes(notes.filter(n => n.id !== id))
       })
