@@ -17,7 +17,7 @@ const List = ({countries}) => {
   const list = countries.map(country => 
     <li key={country.name.common}>
       {country.name.common}
-      <button onClick={()=>toggleVisibility(visible, setVisible, country.name.common)}>show</button>
+      <button onClick={() => toggleVisibility(visible, setVisible, country.name.common)}>show</button>
       <CountryDetails country={country} visible={visible}/>
     </li>
   )
