@@ -29,6 +29,52 @@ app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  const person = persons.find(p => p.id === id)
+
+  if (person) {
+    response.json(person)
+  } else {
+    response.status(404).end()
+  }
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  persons = persons.filter(p => p.id !== id)
+
+  console.log(persons)
+  response.status(204).end()
+})
+
+const postErrorHandler = body => {
+  if (!body.name) return 'name is missing'
+  if (!body.number) return 'number is missing'
+  if (persons.find(p => p.name === body.name)) return 'name must be unique'
+  return null
+}
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  const error = postErrorHandler(body)
+
+  if (error) {
+    return response.status(400).json({
+      error: error
+    })
+  }
+
+  const newPerson = {
+    id: crypto.randomUUID(),
+    name: body.name,
+    number: body.number
+  }
+
+  persons = persons.concat(newPerson)
+  response.json(newPerson)
+})
+
 app.get('/info', (request, response) => {
   const phonebookTotal = persons.length
   const date = new Date()
