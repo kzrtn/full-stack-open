@@ -24,12 +24,10 @@ const deleteContact = (name, id, states) => {
 }
 
 export const Contact = ({states}) => states.person.persons.map(person => {
-  if (person.visible) {
     return (
       <div key={person.name}>
         {person.name} {person.number}
         <button onClick={() => deleteContact(person.name, person.id, states)}>delete</button>
       </div>
     )
-  }
 })
