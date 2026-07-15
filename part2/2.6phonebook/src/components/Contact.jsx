@@ -4,7 +4,7 @@ const deleteContact = (name, id, states) => {
   if(window.confirm(`Delete ${name}?`)) {
     personService
       .deleteEntry(id)
-      .then(returnedData => states.person.setPersons(states.person.persons.filter(person => person.id !== returnedData.id)))
+      .then(() => states.person.setPersons(states.person.persons.filter(person => person.id !== id)))
       // In the event that we're trying to delete someone who doesn't exist
       .catch(error => {
         console.log('Error deleting person, they are already deleted.', error)
@@ -24,10 +24,12 @@ const deleteContact = (name, id, states) => {
 }
 
 export const Contact = ({states}) => states.person.persons.map(person => {
+  if (person.visible) {
     return (
       <div key={person.name}>
         {person.name} {person.number}
         <button onClick={() => deleteContact(person.name, person.id, states)}>delete</button>
       </div>
     )
+  }
 })
