@@ -1,3 +1,6 @@
+require('dotenv').config()
+
+const Person = require('./models/person.js')
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
@@ -22,10 +25,11 @@ app.use(morgan((tokens, req, res) => {
   })
 )
 
+/*
 let persons = [
     { 
       "id": "1",
-      "name": "Arto Hellas", 
+        "name": "Arto Hellas", 
       "number": "040-123456",
       "visible": true
     },
@@ -48,20 +52,30 @@ let persons = [
       "visible": true
     }
 ]
+*/
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(result => response.json(result))
 })
 
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  const person = persons.find(p => p.id === id)
+  Person.findById(id)
+    .then(result => {
+      response.json(result)
+    })
+    .catch(error => {
+      console.log(`ID not found. ${error.message}`)
+      return response.status(404).end()
+    })
 
+  /*
   if (person) {
     response.json(person)
   } else {
     response.status(404).end()
   }
+  */
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -75,7 +89,7 @@ app.delete('/api/persons/:id', (request, response) => {
 const postErrorHandler = body => {
   if (!body.name) return 'name is missing'
   if (!body.number) return 'number is missing'
-  if (persons.find(p => p.name === body.name)) return 'name must be unique'
+  //if (persons.find(p => p.name === body.name)) return 'name must be unique'
   return null
 }
 
@@ -89,16 +103,19 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  const newPerson = {
-    id: crypto.randomUUID(),
+  const newPerson = new Person({
+    //id: crypto.randomUUID(),
     name: body.name,
     number: body.number,
     visible: true
-  }
+  })
 
-  persons = persons.concat(newPerson)
-  response.json(newPerson)
-  response.status(200).end()
+  //persons = persons.concat(newPerson)
+
+  newPerson.save().then(savedPerson => {
+    response.json(newPerson)
+    response.status(200).end()
+  })
 })
 
 app.get('/info', (request, response) => {
