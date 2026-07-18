@@ -71,11 +71,12 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({error: 'malformatted id'})
   }
 
+  if (error.name === 'ValidationError') {
+    return response.status(400).send({error: error.message})
+  }
+
   next(error)
 }
-
-// this has to be the last loaded middleware, also all the routes should be registered before this!
-app.use(errorHandler)
 
 
 app.delete('/api/notes/:id', (request, response) => {
@@ -118,7 +119,7 @@ app.put('/api/notes/:id', (request, response, next) => {
 })
 
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
 
   if (!body.content) {
@@ -132,8 +133,13 @@ app.post('/api/notes', (request, response) => {
     important: body.important || false,
   })
 
-  note.save().then(savedNote => response.json(savedNote))
+  note.save()
+    .then(savedNote => response.json(savedNote))
+    .catch(error => next(error))
 })
+
+// this has to be the last loaded middleware, also all the routes should be registered before this!
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT)
