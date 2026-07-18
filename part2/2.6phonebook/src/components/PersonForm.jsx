@@ -42,7 +42,6 @@ export const PersonForm = ({states}) => {
       if(window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)) {
         personService
           .update(searchResult[0].id, newPerson)
-
           .then(returnedPerson => {
             states.person.setPersons(
               states.person.persons.map(person =>
