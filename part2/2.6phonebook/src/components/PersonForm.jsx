@@ -24,18 +24,33 @@ export const PersonForm = ({states}) => {
         .create(newPerson)
         .then(returnedPerson => {
           states.person.setPersons(states.person.persons.concat(returnedPerson))
-        })
-      
-      //Toast notification
-      states.notif.setNotif({
-        isError: false,
-        message: `Added ${newPerson.name}`
-      })
 
-      setTimeout(() => states.notif.setNotif({
-        isError: false,
-        message: null
-      }), 5000)
+          //Toast notification
+          states.notif.setNotif({
+            isError: false,
+            message: `Added ${newPerson.name}`
+          })
+
+          setTimeout(() => states.notif.setNotif({
+            isError: false,
+            message: null
+          }), 5000)
+        })
+        .catch(error => {
+          const errorMessage = error.response.data.error
+          console.log(errorMessage)
+
+          //Toast notification
+          states.notif.setNotif({
+            isError: true,
+            message: `${errorMessage}`
+          })
+
+          setTimeout(() => states.notif.setNotif({
+            isError: false,
+            message: null
+          }), 5000)
+        })
 
     } else if (searchResult.length && hasNewNumber(searchResult[0].number, newPerson.number)) {
       //Person's name exists, but their phone number is different
@@ -59,21 +74,34 @@ export const PersonForm = ({states}) => {
               message: null
             }), 5000)
           })
-
-          // In the event that we're updating a person that does not exist
           .catch(error => {
-            console.log('Error updating person, they are already deleted.', error)
+            let errorMessage
+
+            if(!error.response) {
+              errorMessage = 'Could not reach the server. Please try again'
+            }
+            else if (error.response.status === 404) {
+              errorMessage = 'Error 404 Not Found. Person does not exist.'
+              states.person.setPersons(states.person.persons.filter(person => person.name !== newPerson.name))
+            }
+            else if (error.response.status === 400) {
+              errorMessage = error.response.data.error
+            }
+            else {
+              errorMessage = error.response
+            }
+            console.log(errorMessage)
+
+            // Toast notif
             states.notif.setNotif({
               isError: true,
-              message: `Information of ${newPerson.name} has already been removed from server`
+              message: errorMessage
             })
 
             setTimeout(() => states.notif.setNotif({
               isError: true,
               message: null
             }), 5000)
-
-            states.person.setPersons(states.person.persons.filter(person => person.name != newPerson.name))
           })
       }
     } else if (searchResult.length) {
