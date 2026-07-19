@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 if (process.argv.length < 3 || process.argv.length === 4) {
-  console.log(`Not enough arguments, to add new contact please write 'node mongo.js (your pasword) "(contact name)" (contact number)`)
+  console.log('Not enough arguments, to add new contact please write \'node mongo.js (your pasword) "(contact name)" (contact number)')
   console.log('To display all entries in phonebook, use node mongo.js (your password)')
   process.exit
 }
@@ -12,7 +12,7 @@ const url = `mongodb+srv://admin:${password}@cluster0.pofrwtm.mongodb.net/phoneb
 
 mongoose.set('strictQuery', false)
 
-mongoose.connect(url, { family: 4})
+mongoose.connect(url, { family: 4 })
 
 const phonebookSchema = new mongoose.Schema({
   name: String,
@@ -30,11 +30,13 @@ if (process.argv.length === 5) {
   })
 
   person.save().then(result => {
-    console.log(`added ${person.name}, number ${person.number} to phonebook`)
+    console.log(`added ${person.name}, number ${person.number} to phonebook, ${result}`)
     mongoose.connection.close()
   })
 } else if (process.argv.length === 3) {
-  Person.find({}).then(result => {
-    result.forEach(person => console.log(person))
-  }).then(() => mongoose.connection.close())
+  Person.find({})
+    .then(result => {
+      result.forEach(person => console.log(person))
+    })
+    .then(() => mongoose.connection.close())
 }
