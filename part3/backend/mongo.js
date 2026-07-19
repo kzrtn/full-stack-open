@@ -11,7 +11,7 @@ const url = `mongodb+srv://admin:${password}@cluster0.pofrwtm.mongodb.net/noteAp
 
 mongoose.set('strictQuery', false)
 
-mongoose.connect(url, {family: 4})
+mongoose.connect(url, { family: 4 })
 
 const noteSchema = new mongoose.Schema({
   content: String,
@@ -27,5 +27,6 @@ const note = new Note({
 
 note.save().then(result => {
   console.log('note saved!')
+  console.log(result)
   mongoose.connection.close()
 })

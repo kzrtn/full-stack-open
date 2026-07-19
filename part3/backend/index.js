@@ -68,28 +68,29 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   }
 
   if (error.name === 'ValidationError') {
-    return response.status(400).send({error: error.message})
+    return response.status(400).send({ error: error.message })
   }
 
   next(error)
 }
 
 
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/notes/:id', (request, response, next) => {
   const id = request.params.id
   //notes = notes.filter(note => note.id !== id)
   Note.findByIdAndDelete(id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
 })
 
 
+/*
 const generateId = () => {
   const maxID = notes.length > 0
   ? Math.max(...notes.map(n => Number(n.id)))
@@ -97,25 +98,26 @@ const generateId = () => {
 
   return String(maxID + 1)
 }
-
+*/
 
 app.put('/api/notes/:id', (request, response, next) => {
-  const {content, important} = request.body
+  const { content, important } = request.body
   const id = request.params.id
 
-  Note.findById(id).then(note => {
-    if(!note) {
-      return response.status(404).end()
-    }
+  Note.findById(id)
+    .then(note => {
+      if(!note) {
+        return response.status(404).end()
+      }
 
-    note.content = content
-    note.important = important
+      note.content = content
+      note.important = important
 
-    return note.save().then((updatedNote) => {
-      response.json(updatedNote)
+      return note.save().then((updatedNote) => {
+        response.json(updatedNote)
+      })
     })
-  })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 
