@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
-
-const url = process.env.MONGODB_URI
+const config = require('../utils/config.js')
 
 mongoose.set('strictQuery', false)
 
-console.log('connecting to ', url)
-mongoose.connect(url, { family: 4 })
+console.log('connecting to ', config.MONGODB_URI)
+mongoose.connect(config.MONGODB_URI, { family: 4 })
   .then(() => {
     console.log('connected to MongoDB')
   })

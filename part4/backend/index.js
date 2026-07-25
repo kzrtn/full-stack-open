@@ -1,6 +1,6 @@
-require('dotenv').config()
 const express = require('express')
 const Note = require('./models/note.js')
+const config = require('./utils/config.js')
 
 const app = express()
 
@@ -143,6 +143,5 @@ app.post('/api/notes', (request, response, next) => {
 // this has to be the last loaded middleware, also all the routes should be registered before this!
 app.use(errorHandler)
 
-const PORT = process.env.PORT
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`)
+app.listen(config.PORT)
+console.log(`Server running on port ${config.PORT}`)
