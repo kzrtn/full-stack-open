@@ -3,9 +3,8 @@ const reverse = string => {
 }
 
 const average = array => {
-  return array.reduce((sum, item) => {
-    return sum + item
-  }, 0)
+  const total = array.reduce((sum, accumulator) => sum + accumulator, 0)
+  return (total / array.length) || 0
 }
 
 module.exports = { reverse, average }
