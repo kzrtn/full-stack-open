@@ -116,3 +116,35 @@ describe('favorite blog', () => {
     assert.deepStrictEqual(result, correctResult)
   })
 })
+
+describe('most blogs', () => {
+  test('of empty list returns an empty object', () => {
+    const blogs = []
+
+    const correctResult = {}
+    const result = listHelper.mostBlogs(blogs)
+    assert.deepStrictEqual(result, correctResult)
+  })
+
+  test('of a list with a single blog returns correct author and blog count of 1', () => {
+    const blogs = [sampleBlogs[0]]
+
+    const correctResult = {
+      author: sampleBlogs[0].author,
+      blogs: 1
+    }
+    const result = listHelper.mostBlogs(blogs)
+    assert.deepStrictEqual(result, correctResult)
+  })
+
+  test('of a list of blogs returns correct author and correct total blog count', () => {
+    const blogs = sampleBlogs
+
+    const correctResult = {
+      author: 'Robert C. Martin',
+      blogs: 3
+    }
+    const result = listHelper.mostBlogs(blogs)
+    assert.deepStrictEqual(result, correctResult)
+  })
+})

@@ -18,4 +18,30 @@ const favoriteBlog = blogPosts => {
   return winnerBlog
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog }
+const mostBlogs = blogPosts => {
+  let blogAuthors = []
+
+  blogPosts.forEach(blogPost => {
+    const findIndex = blogAuthors.findIndex(blogAuthor => blogAuthor.author === blogPost.author)
+
+    if (findIndex === -1) {
+      blogAuthors.push({
+        author: blogPost.author,
+        blogs: 1
+      })
+    } else {
+      blogAuthors[findIndex].blogs++
+    }
+  })
+
+  let winnerBlog = {}
+  blogAuthors.forEach(blogAuthor => {
+    if (blogAuthor.blogs > (winnerBlog?.blogs || 0)) {
+      winnerBlog = blogAuthor
+    }
+  })
+
+  return winnerBlog || {}
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs }
