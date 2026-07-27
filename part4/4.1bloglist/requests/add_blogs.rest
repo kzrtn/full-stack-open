@@ -8,5 +8,5 @@ Content-Type: application/json
   "title": "Test title",
   "author": "Me",
   "url": "whatisthisurl",
-  "likes": 0
+  "likes": 23
 }
