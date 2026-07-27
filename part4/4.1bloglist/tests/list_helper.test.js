@@ -122,7 +122,7 @@ describe('most blogs', () => {
     const blogs = []
 
     const correctResult = {}
-    const result = listHelper.mostBlogs(blogs)
+    const result = listHelper.FindMostOf(blogs, 'blogs', true)
     assert.deepStrictEqual(result, correctResult)
   })
 
@@ -133,7 +133,7 @@ describe('most blogs', () => {
       author: sampleBlogs[0].author,
       blogs: 1
     }
-    const result = listHelper.mostBlogs(blogs)
+    const result = listHelper.FindMostOf(blogs, 'blogs', true)
     assert.deepStrictEqual(result, correctResult)
   })
 
@@ -144,7 +144,39 @@ describe('most blogs', () => {
       author: 'Robert C. Martin',
       blogs: 3
     }
-    const result = listHelper.mostBlogs(blogs)
+    const result = listHelper.FindMostOf(blogs, 'blogs', true)
+    assert.deepStrictEqual(result, correctResult)
+  })
+})
+
+describe('most likes', () => {
+  test('of empty list returns an empty object', () => {
+    const blogs = []
+
+    const correctResult = {}
+    const result = listHelper.FindMostOf(blogs, 'likes', false)
+    assert.deepStrictEqual(result, correctResult)
+  })
+
+  test('of a list with a single blog returns correct author and likes count of 7', () => {
+    const blogs = [sampleBlogs[0]]
+
+    const correctResult = {
+      author: sampleBlogs[0].author,
+      likes: 7
+    }
+    const result = listHelper.FindMostOf(blogs, 'likes', false)
+    assert.deepStrictEqual(result, correctResult)
+  })
+
+  test('of a list of blogs returns correct author and correct total blog count', () => {
+    const blogs = sampleBlogs
+
+    const correctResult = {
+      author: "Edsger W. Dijkstra",
+      likes: 17
+    }
+    const result = listHelper.FindMostOf(blogs, 'likes', false)
     assert.deepStrictEqual(result, correctResult)
   })
 })
