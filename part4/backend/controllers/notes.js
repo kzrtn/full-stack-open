@@ -6,7 +6,7 @@ notesRouter.get('/', (req, res) => {
     .then(notes => res.json(notes))
 })
 
-notesRouter.get(':/', (req, res, next) => {
+notesRouter.get('/:id', (req, res, next) => {
   Note.findById(req.params.id)
     .then(note => {
       if (note) {
