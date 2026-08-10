@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const process = require('node:process')
 
 const logger = require('./utils/logger.js')
 const config = require('./utils/config.js')
@@ -10,7 +11,7 @@ const app = express()
 
 app.use(express.json())
 
-const mongoUrl = config.MONGODB_URI
+const mongoUrl = process.env.NODE_ENV === 'test' ? config.TEST_MONGODB_URI : config.MONGODB_URI 
 logger.info('Connecting to MongoDB url...', mongoUrl)
 
 mongoose
