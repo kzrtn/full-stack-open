@@ -10,10 +10,7 @@ const api = supertest(app)
 
 beforeEach(async () => {
   await Note.deleteMany({})
-  let noteObj = new Note(initialNotes[0])
-  await noteObj.save()
-  noteObj = new Note(initialNotes[1])
-  await noteObj.save()
+  await Note.insertMany(initialNotes)
 })
 
 describe('notes functionality', () => {
@@ -69,6 +66,33 @@ describe('notes functionality', () => {
     const notesAtEnd = await notesInDb()
 
     assert.strictEqual(notesAtEnd.length, initialNotes.length)
+  })
+
+  test('a specific note can be viewed', async () => {
+    const notesAtStart = await notesInDb()
+    const noteToView = notesAtStart[0]
+
+    const resultNote = await api
+      .get(`/api/notes/${noteToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.deepStrictEqual(resultNote.body, noteToView)
+  })
+
+  test('a note can be deleted', async () => {
+    const notesAtStart = await notesInDb()
+    const noteToDelete = notesAtStart[0]
+
+    await api
+      .delete(`/api/notes/${noteToDelete.id}`)
+      .expect(204)
+
+    const notesAtEnd = await notesInDb()
+
+    const noteIds = notesAtEnd.map(n => n.id)
+    assert(!noteIds.includes(noteToDelete.id))
+    assert.strictEqual(notesAtEnd.length, notesAtStart.length - 1)
   })
 })
 
