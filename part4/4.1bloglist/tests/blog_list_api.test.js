@@ -106,6 +106,27 @@ describe('blog API', () => {
 
     assert.strictEqual(res.body.length, sampleBlogs.length + 1)
   })
+
+  test.only('if likes is missing from post request, it defaults to 0', async () => {
+    const newBlog =   {
+      title: "test post",
+      author: "Test author",
+      url: "https://www.google.com/",
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const returnedBlog = res.body.find(blog => blog.title == 'test post')
+    assert.strictEqual(returnedBlog.likes, 0)
+  })
 })
 
 after(async () => {
