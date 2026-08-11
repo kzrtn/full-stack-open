@@ -158,13 +158,9 @@ describe('making blog posts', () => {
 })
 
 describe('deleting blog posts', () => {
-  test('response status 200 when deleting single blog', async () => {
+  test('response status 200 for successful single deletion', async () => {
     const deleteBlog = {
       id: "5a422a851b54a676234d17f7",
-      title: "React patterns",
-      author: "Michael Chan",
-      url: "https://reactpatterns.com/",
-      likes: 7,
     }
 
     await api
@@ -177,6 +173,40 @@ describe('deleting blog posts', () => {
       .expect('Content-Type', /application\/json/)
 
     assert.strictEqual(res.body.length, sampleBlogs.length - 1)
+  })
+
+  test('response status 400 if blog does not exist', async () => {
+    const deleteBlog = {
+      id: "123",
+    }
+
+    await api
+      .delete(`/api/blogs/${deleteBlog.id}`)
+      .expect(400)
+
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(res.body.length, sampleBlogs.length)
+  })
+
+  test('response status 404 if id is not a valid ObjectId', async () => {
+    const deleteBlog = {
+      id: 123,
+    }
+
+    await api
+      .delete(`/api/blogs/${deleteBlog.id}`)
+      .expect(400)
+
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(res.body.length, sampleBlogs.length)
   })
 })
 
