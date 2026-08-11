@@ -158,14 +158,14 @@ describe('making blog posts', () => {
 })
 
 describe('deleting blog posts', () => {
-  test('response status 200 for successful single deletion', async () => {
+  test('response status 204 for successful single deletion', async () => {
     const deleteBlog = {
       id: "5a422a851b54a676234d17f7",
     }
 
     await api
       .delete(`/api/blogs/${deleteBlog.id}`)
-      .expect(200)
+      .expect(204)
     
     const res = await api
       .get('/api/blogs')
@@ -207,6 +207,85 @@ describe('deleting blog posts', () => {
       .expect('Content-Type', /application\/json/)
 
     assert.strictEqual(res.body.length, sampleBlogs.length)
+  })
+})
+
+describe('updating blog posts', () => {
+  test('update single post', async () => {
+    const postToUpdate = {
+      id: "5a422a851b54a676234d17f7",
+      title: "React patterns",
+      author: "Michael Chan",
+      url: "https://reactpatterns.com/",
+      likes: 8,
+    }
+
+    await api
+      .put(`/api/blogs/`)
+      .set('Content-Type', 'application/json')
+      .send(postToUpdate)
+      .expect(200)
+
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.deepStrictEqual(postToUpdate, res.body[0])
+  })
+
+  test('response status 400 when blog does not exist', async () => {
+    const correctPost = {
+      id: "5a422a851b54a676234d17f7",
+      title: "React patterns",
+      author: "Michael Chan",
+      url: "https://reactpatterns.com/",
+      likes: 7,
+    }
+
+    const postToUpdate = {
+      id: "123123123",
+      title: "React patterns",
+      author: "Michael Chan",
+      url: "https://reactpatterns.com/",
+      likes: 8
+    }
+
+    await api
+      .put(`/api/blogs/`)
+      .set('Content-Type', 'application/json')
+      .send(postToUpdate)
+      .expect(400)
+
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.deepStrictEqual(correctPost, res.body[0])
+  })
+
+  test('response status 404 when id is not a valid ObjectId', async () => {
+    const correctPost = {
+      id: "5a422a851b54a676234d17f7",
+      title: "React patterns",
+      author: "Michael Chan",
+      url: "https://reactpatterns.com/",
+      likes: 7,
+    }
+
+    await api
+      .put(`/api/blogs/`)
+      .set('Content-Type', 'application/json')
+      .send({})
+      .expect(404)
+
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.deepStrictEqual(correctPost, res.body[0])
   })
 })
 

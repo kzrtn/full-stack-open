@@ -27,11 +27,30 @@ blogsRouter.delete('/:id', async (req, res) => {
     if (!result) {
       res.status(404).end()
     }
+    res.status(204).end()
+  } catch (err) {
+    logger.error(err)
+    res.status(400).end()
+  }
+})
+
+blogsRouter.put('/', async (req, res) => {
+  const blogId = req.body.id
+  const updatedObj = {
+    likes: req.body.likes
+  }
+
+  try {
+    const result = await Blog.findByIdAndUpdate(blogId, updatedObj)
+    if (!result) {
+      res.status(404).end()
+    }
     res.status(200).end()
   } catch (err) {
     logger.error(err)
     res.status(400).end()
   }
+  res.status(200).end()
 })
 
 module.exports = blogsRouter
