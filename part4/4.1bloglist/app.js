@@ -11,7 +11,7 @@ const app = express()
 
 app.use(express.json())
 
-const mongoUrl = process.env.NODE_ENV === 'test' ? config.TEST_MONGODB_URI : config.MONGODB_URI 
+const mongoUrl = config.MONGODB_URI 
 logger.info('Connecting to MongoDB url...', mongoUrl)
 
 mongoose
