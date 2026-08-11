@@ -84,6 +84,28 @@ describe('blog API', () => {
       assert(blog?.id)
     }
   })
+
+  test.only('able to create a new blog post', async () => {
+    const newBlog =   {
+      id: "123456789",
+      title: "This is a new blog post",
+      author: "Test author",
+      url: "https://www.google.com/",
+      likes: 0,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(res.body.length, sampleBlogs.length + 1)
+  })
 })
 
 after(async () => {
