@@ -68,8 +68,21 @@ describe('blog API', () => {
   test.only('returns correct amount of blogs', async () => {
     const res = await api
       .get('/api/blogs')
-    
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
     assert.strictEqual(res.body.length, sampleBlogs.length)
+  })
+
+  test.only('unique identifier property of blog posts is named id', async () => {
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    for (const blog of res.body) {
+      assert(blog?.id)
+    }
   })
 })
 
