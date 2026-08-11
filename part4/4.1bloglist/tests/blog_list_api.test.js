@@ -64,8 +64,8 @@ beforeEach(async () => {
   await Blog.insertMany(sampleBlogs)
 })
 
-describe('blog API', () => {
-  test.only('returns correct amount of blogs', async () => {
+describe('viewing blogs', () => {
+  test('returns correct amount of blogs', async () => {
     const res = await api
       .get('/api/blogs')
       .expect(200)
@@ -74,7 +74,7 @@ describe('blog API', () => {
     assert.strictEqual(res.body.length, sampleBlogs.length)
   })
 
-  test.only('unique identifier property of blog posts is named id', async () => {
+  test('unique identifier property of blog posts is named id', async () => {
     const res = await api
       .get('/api/blogs')
       .expect(200)
@@ -84,8 +84,10 @@ describe('blog API', () => {
       assert(blog?.id)
     }
   })
+})
 
-  test.only('able to create a new blog post', async () => {
+describe('making blog posts', () => {
+  test('able to create a new blog post', async () => {
     const newBlog =   {
       id: "123456789",
       title: "This is a new blog post",
@@ -107,7 +109,7 @@ describe('blog API', () => {
     assert.strictEqual(res.body.length, sampleBlogs.length + 1)
   })
 
-  test.only('if likes is missing from post request, it defaults to 0', async () => {
+  test('if likes is missing from post request, it defaults to 0', async () => {
     const newBlog = {
       title: "test post",
       author: "Test author",
@@ -128,7 +130,7 @@ describe('blog API', () => {
     assert.strictEqual(returnedBlog.likes, 0)
   })
 
-  test.only('response status 400 when blog is missing title', async () => {
+  test('response status 400 when blog is missing title', async () => {
     const newBlog = {
       author: "wow",
       url: "https://www.kfc.com",
@@ -141,7 +143,7 @@ describe('blog API', () => {
       .expect(400)
   })
 
-  test.only('response status 400 when blog is missing url', async () => {
+  test('response status 400 when blog is missing url', async () => {
     const newBlog = {
       title: "my title",
       author: "wow",
@@ -152,6 +154,29 @@ describe('blog API', () => {
       .post('/api/blogs')
       .send(newBlog)
       .expect(400)
+  })
+})
+
+describe('deleting blog posts', () => {
+  test('response status 200 when deleting single blog', async () => {
+    const deleteBlog = {
+      id: "5a422a851b54a676234d17f7",
+      title: "React patterns",
+      author: "Michael Chan",
+      url: "https://reactpatterns.com/",
+      likes: 7,
+    }
+
+    await api
+      .delete(`/api/blogs/${deleteBlog.id}`)
+      .expect(200)
+    
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(res.body.length, sampleBlogs.length - 1)
   })
 })
 
