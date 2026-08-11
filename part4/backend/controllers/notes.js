@@ -11,7 +11,7 @@ notesRouter.get('/:id', async (req, res) => {
   if (returnedNote) {
     res.json(returnedNote)
   } else {
-    res.status(400).end()
+    res.status(404).end()
   }
 })
 

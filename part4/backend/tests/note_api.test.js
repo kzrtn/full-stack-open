@@ -13,7 +13,7 @@ beforeEach(async () => {
   await Note.insertMany(initialNotes)
 })
 
-describe('notes functionality', () => {
+describe('when there is initially some notes saved', () => {
   test('notes are returned as json', async () => {
     await api
       .get('/api/notes')
@@ -33,7 +33,35 @@ describe('notes functionality', () => {
     const contents = response.body.map(e => e.content)
     assert(contents.includes('HTML is easy'))
   })
+})
 
+describe('viewing a specific note', () => {
+  test('succeeds with a valid id', async () => {
+    const notesAtStart = await notesInDb()
+    const noteToView = notesAtStart[0]
+
+    const resultNote = await api
+      .get(`/api/notes/${noteToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.deepStrictEqual(resultNote.body, noteToView)
+  })
+
+  test('fails with statuscode 404 if note does not exist', async () => {
+    const validNonexistingId = await nonExistingId()
+
+    await api.get(`/api/notes/${validNonexistingId}`).expect(404)
+  })
+
+  test('fails with statuscode 400 id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
+
+    await api.get(`/api/notes/${invalidId}`).expect(400)
+  })
+})
+
+describe('addition of a new note', () => {
   test('a valid note can be added', async () => {
     const newNote = {
       content: 'async/await simplifies making async calls',
@@ -67,20 +95,10 @@ describe('notes functionality', () => {
 
     assert.strictEqual(notesAtEnd.length, initialNotes.length)
   })
+})
 
-  test('a specific note can be viewed', async () => {
-    const notesAtStart = await notesInDb()
-    const noteToView = notesAtStart[0]
-
-    const resultNote = await api
-      .get(`/api/notes/${noteToView.id}`)
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-
-    assert.deepStrictEqual(resultNote.body, noteToView)
-  })
-
-  test('a note can be deleted', async () => {
+describe('deletion of a note', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
     const notesAtStart = await notesInDb()
     const noteToDelete = notesAtStart[0]
 
@@ -95,7 +113,6 @@ describe('notes functionality', () => {
     assert.strictEqual(notesAtEnd.length, notesAtStart.length - 1)
   })
 })
-
 
 after(async () => {
   await mongoose.connection.close()
