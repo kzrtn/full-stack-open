@@ -6,5 +6,16 @@ Content-Type: application/json
 
 {
   "content": "VS Code rest client is a pretty handy tool",
-  "important": true
+  "important": true,
+  "userId": "6a7c69ca169f12921387d668"
+}
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "User id of the note creator is at the start sent along the request",
+  "important": true,
+  "userId": "6a7c69ca169f12921387d668"
 }
