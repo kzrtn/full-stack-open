@@ -44,6 +44,26 @@ describe('when there is initially one user in db', () => {
     const usersAtEnd = await usersInDb()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
   })
+
+  test.only('creation fails with proper statuscode and message if username is taken', async () => {
+    const usersAtStart = await usersInDb()
+
+    const newUser = {
+      username: 'root',
+      name: 'John Smith',
+      password: 'janedoe'
+    }
+
+    const res = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-type', /application\/json/)
+
+    const usersAtEnd = await usersInDb()
+    assert(res.body.error.includes('expected `username` to be unique'))
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
 })
 
 after(async () => {
