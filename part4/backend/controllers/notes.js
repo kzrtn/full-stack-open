@@ -3,7 +3,10 @@ const Note = require('../models/note')
 const User = require('../models/user')
 
 notesRouter.get('/', async (req, res) => {
-  const notes = await Note.find({})
+  const notes = await Note
+    .find({})
+    .populate('user', { username: true, name: true })
+
   res.json(notes)
 })
 
@@ -19,7 +22,7 @@ notesRouter.get('/:id', async (req, res) => {
 notesRouter.post('/', async (req, res) => {
   const body = req.body
 
-  const user = await User.findById(body.userId)
+  const user = await User.findById(body.user)
 
   if (!user) {
     return res.status(400).json({ error: 'userId missing or not valid' })
@@ -28,7 +31,7 @@ notesRouter.post('/', async (req, res) => {
   const note = new Note({
     content: body.content,
     important: body.important || false,
-    userId: user._id
+    user: user._id
   })
 
   const savedNote = await note.save()
