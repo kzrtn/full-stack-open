@@ -67,7 +67,7 @@ describe('when there is initially one user in db', () => {
 })
 
 describe('when a new user creates their account', () => {
-  test.only('with a username too short fails creation', async () => {
+  test('with a username too short fails creation', async () => {
     const usersAtStart = await usersInDb()
 
     const newUser = {
@@ -87,7 +87,7 @@ describe('when a new user creates their account', () => {
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 
-  test.only('with a username too long fails creation', async () => {
+  test('with a username too long fails creation', async () => {
     const usersAtStart = await usersInDb()
 
     const newUser = {
@@ -107,7 +107,7 @@ describe('when a new user creates their account', () => {
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 
-  test.only('with a username contains illegal characters fails', async () => {
+  test('with a username contains illegal characters fails', async () => {
     const usersAtStart = await usersInDb()
 
     const newUser = {
@@ -127,7 +127,7 @@ describe('when a new user creates their account', () => {
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 
-  test.only('with a password too short fails creation', async () => {
+  test('with a password too short fails creation', async () => {
     const usersAtStart = await usersInDb()
 
     const newUser = {
@@ -147,7 +147,7 @@ describe('when a new user creates their account', () => {
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 
-  test.only('with a password without symbols fails creation', async () => {
+  test('with a password without symbols fails creation', async () => {
     const usersAtStart = await usersInDb()
 
     const newUser = {
