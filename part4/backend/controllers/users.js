@@ -4,6 +4,13 @@ const User = require('../models/user')
 
 usersRouter.post('/', async (req, res) => {
   const { username, name, password } = req.body
+  const validPasswordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+
+  if (!(validPasswordRegex).test(password)) {
+    const error = new Error('invalid password')
+    error.name = 'ValidationError'
+    throw error
+  }
 
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)

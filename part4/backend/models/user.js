@@ -4,7 +4,15 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true // ensures uniqueness of username
+    unique: true, // ensures uniqueness of username
+    minLength: [3, 'username too short'],
+    maxLength: [12, 'username too long'],
+    validate: {
+      validator: function(v) {
+        return /[a-zA-Z0-9]\w+/.test(v)
+      },
+      message: props => `${props.value} is not a valid username`
+    }
   },
   name: String,
   passwordHash: String,
