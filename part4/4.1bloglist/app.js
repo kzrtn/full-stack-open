@@ -1,11 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const process = require('node:process')
 
 const logger = require('./utils/logger.js')
 const config = require('./utils/config.js')
 const blogsRouter = require('./controllers/blogs.js')
-const Blog = require('./models/blog.js')
+const userRouter = require('./controllers/user.js')
 
 const app = express()
 
@@ -24,5 +23,6 @@ mongoose
 
 
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', userRouter)
 
 module.exports = app
