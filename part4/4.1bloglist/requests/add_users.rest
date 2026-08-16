@@ -6,3 +6,6 @@ Content-Type: application/json
   "password": "Password@123",
   "name": "John Smith"
 }
+
+###
+POST http://localhost:3003/api/users

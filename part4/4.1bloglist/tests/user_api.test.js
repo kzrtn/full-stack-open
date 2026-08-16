@@ -1,20 +1,23 @@
 const { after, beforeEach, describe, test } = require('node:test')
 const assert = require('node:assert')
 const bcrypt = require('bcrypt')
+const mongoose = require('mongoose')
 const supertest = require('supertest')
 
 const app = require('../app.js')
-const { default: mongoose } = require('mongoose')
+const User = require('../models/user.js')
 
 const api = supertest(app)
 
 beforeEach(async () => {
-  //delete users later
+  await User.deleteMany({})
 })
 
 describe('creating user', () => {
   test.only('with valid credentials succeeds', async () => {
-    const testData = {
+    const dbAtStart = await User.find()
+
+    const testUser = {
       username: 'john',
       password: 'Secret?1',
       name: 'John'
@@ -23,8 +26,12 @@ describe('creating user', () => {
     await api
       .post(`/api/users/`)
       .set('Content-Type', 'application/json')
-      .send(testData)
+      .send(testUser)
       .expect(200)
+
+    const dbAtEnd = await User.find()
+
+    assert.strictEqual(dbAtEnd.length, dbAtStart.length + 1)
   })
 })
 
