@@ -13,14 +13,17 @@ userRouter.get('/', async (req, res) => {
 
 userRouter.post('/', async (req, res) => {
   const { username, password, name } = req.body
+  const validPasswordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
 
-  if (!password) {
-    return res.status(400).json({ error: 'password missing' })
+  if (!(validPasswordRegex).test(password)) {
+    const error = new Error('invalid password')
+    error.name = 'ValidationError'
+    throw error
   }
 
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
-  
+
   const user = new User({
     username,
     passwordHash,
