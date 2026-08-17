@@ -29,8 +29,8 @@ beforeEach(async () => {
   await Promise.all(initialUsers)
 })
 
-describe('creating user', () => {
-  test.only('with valid credentials succeeds with status 200', async () => {
+describe('creating user with', () => {
+  test.only('valid credentials succeeds with status 200', async () => {
     const testUser = {
       username: 'testuser',
       password: 'Secret?1',
@@ -43,7 +43,7 @@ describe('creating user', () => {
     assert.strictEqual(dbAtEnd.length, dbAtStart.length + 1)
   })
 
-  test.only('with username that already exists fails with status 400', async () => {
+  test.only('username that already exists fails with status 400', async () => {
     const testUser = {
       username: 'root',
       password: 'admin@12333',
@@ -56,7 +56,7 @@ describe('creating user', () => {
     assert.strictEqual(dbAtEnd.length, dbAtStart.length)
   })
 
-  test.only('with too short username fails with status 400', async () => {
+  test.only('too short username fails with status 400', async () => {
     const testUser = {
       username: 'j',
       password: 'Secret?1',
@@ -69,7 +69,31 @@ describe('creating user', () => {
     assert.strictEqual(dbAtEnd.length, dbAtStart.length)
   })
 
-  test.only('with no password fails with status 400', async () => {
+  test.only('no username fails with status 400', async () => {
+    const testUser = {
+      password: 'Secret?1',
+      name: 'John'
+    }
+    const dbAtStart = await usersInDb()
+    await sendUser(testUser).expect(400)
+    const dbAtEnd = await usersInDb()
+
+    assert.strictEqual(dbAtEnd.length, dbAtStart.length)
+  })
+
+  test.only('no name fails with status 400', async () => {
+    const testUser = {
+      username: 'testuser',
+      password: 'Secret?1',
+    }
+    const dbAtStart = await usersInDb()
+    await sendUser(testUser).expect(400)
+    const dbAtEnd = await usersInDb()
+
+    assert.strictEqual(dbAtEnd.length, dbAtStart.length)
+  })
+
+  test.only('no password fails with status 400', async () => {
     const testUser = {
       username: 'testuser123',
       name: 'John'
@@ -81,7 +105,7 @@ describe('creating user', () => {
     assert.strictEqual(dbAtEnd.length, dbAtStart.length)
   })
 
-  test.only('with invalid password fails with status 400', async () => {
+  test.only('invalid password fails with status 400', async () => {
     const testUser = {
       username: 'testuser123',
       name: 'John',
