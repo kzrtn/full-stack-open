@@ -14,13 +14,17 @@ userRouter.get('/', async (req, res) => {
 userRouter.post('/', async (req, res) => {
   const { username, password, name } = req.body
 
-  const saltRounds = 10
-  const passwordHash = bcrypt.hashSync(password, saltRounds)
+  if (!password) {
+    return res.status(400).json({ error: 'password missing' })
+  }
 
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+  
   const user = new User({
-    username: username,
-    passwordHash: passwordHash,
-    name: name
+    username,
+    passwordHash,
+    name
   })
 
   const result = await user.save()
