@@ -4,6 +4,13 @@ const User = require('../models/user.js')
 
 const userRouter = require('express').Router()
 
+userRouter.get('/', async (req, res) => {
+  const results = User.find({})
+  res
+    .status(200)
+    .json(result)
+})
+
 userRouter.post('/', async (req, res) => {
   const { username, password, name } = req.body
 
@@ -12,10 +19,10 @@ userRouter.post('/', async (req, res) => {
 
   const user = new User({
     username: username,
-    password: passwordHash,
+    passwordHash: passwordHash,
     name: name
   })
-  
+
   const result = await user.save()
 
   res
