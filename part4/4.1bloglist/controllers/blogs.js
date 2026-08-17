@@ -41,12 +41,12 @@ blogsRouter.delete('/:id', async (req, res) => {
   try {
     const result = await Blog.findByIdAndDelete(req.params.id)
     if (!result) {
-      res.status(404).end()
+      res.status(404).end() // blog doesn't exist
     }
-    res.status(204).end()
+    res.status(204).end() // successful delete
+
   } catch (err) {
-    logger.error(err)
-    res.status(400).end()
+    res.status(400).end() // blog id is malformatted
   }
 })
 
@@ -59,14 +59,13 @@ blogsRouter.put('/', async (req, res) => {
   try {
     const result = await Blog.findByIdAndUpdate(blogId, updatedObj)
     if (!result) {
-      res.status(404).end()
+      res.status(404).end() // blog doesn't exist
     }
-    res.status(200).end()
+    res.status(200).end() // successful put
+
   } catch (err) {
-    logger.error(err)
-    res.status(400).end()
+    res.status(400).end() // blog id is malformatted
   }
-  res.status(200).end()
 })
 
 module.exports = blogsRouter
