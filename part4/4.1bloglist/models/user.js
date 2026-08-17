@@ -7,15 +7,32 @@ const userSchema = mongoose.Schema({
     type: String,
     minLength: [3, 'username too short'],
     maxLength: [18, 'username too long'],
-    required: true
-  },
-  password: {
-    type: String,
     required: true,
+    unique: true,
+    validate: {
+      validator: v => {
+        return /[a-zA-Z0-9]\w+/.test(v)
+      },
+      message: props => `${props.value} is not a valid username`
+    }
+  },
+  passwordHash: {
+    type: String,
+    select: false,
+    required: true
   },
   name: {
     type: String,
     required: true,
+  }
+})
+
+userSchema.set('toJSON', {
+  transform: (_document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+    delete returnedObject.passwordHash
   }
 })
 
