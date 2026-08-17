@@ -6,31 +6,16 @@ const supertest = require('supertest')
 
 const app = require('../app.js')
 const User = require('../models/user.js')
-const { sampleUsers, usersInDb, sendUser } = require('./user_api_helper.js')
+const { createSampleUsers, createSampleBlogs, usersInDb, blogsInDb, sendUser } = require('./test_helper.js')
 
 const api = supertest(app)
 
 beforeEach(async () => {
-  await User.deleteMany({})
-
-  const initialUsers = sampleUsers.map(el => {
-    const saltRounds = 10
-    const passwordHash = bcrypt.hashSync(el.password, saltRounds)
-    
-    const user = new User({
-      username: el.username,
-      passwordHash,
-      name: el.name
-    })
-
-    return user.save()
-  })
-
-  await Promise.all(initialUsers)
+  await createSampleBlogs()
 })
 
 describe('creating user with', () => {
-  test.only('valid credentials succeeds with status 200', async () => {
+  test('valid credentials succeeds with status 200', async () => {
     const testUser = {
       username: 'testuser',
       password: 'Secret?1',
@@ -39,11 +24,12 @@ describe('creating user with', () => {
     const dbAtStart = await usersInDb()
     await sendUser(testUser).expect(200)
     const dbAtEnd = await usersInDb()
+    const blogs = await blogsInDb()
 
     assert.strictEqual(dbAtEnd.length, dbAtStart.length + 1)
   })
 
-  test.only('username that already exists fails with status 400', async () => {
+  test('username that already exists fails with status 400', async () => {
     const testUser = {
       username: 'root',
       password: 'admin@12333',
@@ -56,7 +42,7 @@ describe('creating user with', () => {
     assert.strictEqual(dbAtEnd.length, dbAtStart.length)
   })
 
-  test.only('too short username fails with status 400', async () => {
+  test('too short username fails with status 400', async () => {
     const testUser = {
       username: 'j',
       password: 'Secret?1',
@@ -69,7 +55,7 @@ describe('creating user with', () => {
     assert.strictEqual(dbAtEnd.length, dbAtStart.length)
   })
 
-  test.only('no username fails with status 400', async () => {
+  test('no username fails with status 400', async () => {
     const testUser = {
       password: 'Secret?1',
       name: 'John'
@@ -81,7 +67,7 @@ describe('creating user with', () => {
     assert.strictEqual(dbAtEnd.length, dbAtStart.length)
   })
 
-  test.only('no name fails with status 400', async () => {
+  test('no name fails with status 400', async () => {
     const testUser = {
       username: 'testuser',
       password: 'Secret?1',
@@ -93,7 +79,7 @@ describe('creating user with', () => {
     assert.strictEqual(dbAtEnd.length, dbAtStart.length)
   })
 
-  test.only('no password fails with status 400', async () => {
+  test('no password fails with status 400', async () => {
     const testUser = {
       username: 'testuser123',
       name: 'John'
@@ -105,7 +91,7 @@ describe('creating user with', () => {
     assert.strictEqual(dbAtEnd.length, dbAtStart.length)
   })
 
-  test.only('invalid password fails with status 400', async () => {
+  test('invalid password fails with status 400', async () => {
     const testUser = {
       username: 'testuser123',
       name: 'John',
