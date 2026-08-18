@@ -126,10 +126,34 @@ const sendUser = user => {
     .send(user)
 }
 
+const loginUser = user => {
+  return api
+    .post('/api/login')
+    .send(user)
+}
+
+const createTestUser = async () => {
+  const testUser = {
+    username: 'testuser',
+    password: 'Secret?1',
+    name: 'Test'
+  }
+
+  const createdUser = await sendUser(testUser).expect(200)
+  const userLoginData = await loginUser(testUser).expect(200)
+  return {
+    username: createdUser.body.username,
+    id: createdUser.body.id,
+    token: userLoginData.body.token
+  }
+}
+
 module.exports = {
   createSampleBlogs,
   createSampleUsers,
   blogsInDb,
   usersInDb,
-  sendUser
+  sendUser,
+  loginUser,
+  createTestUser,
 }
