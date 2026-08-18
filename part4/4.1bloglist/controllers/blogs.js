@@ -13,15 +13,6 @@ blogsRouter.get('/', async (req, res) => {
   res.json(blogs)
 })
 
-const getToken = req => {
-  const auth = req.get('authorization')
-
-  if (auth && auth.startsWith('Bearer ')) {
-    return auth.replace('Bearer ', '')
-  }
-  return null
-}
-
 blogsRouter.post('/', async (req, res) => {
   if (req.body?.likes === undefined)
     req.body.likes = 0
@@ -30,7 +21,7 @@ blogsRouter.post('/', async (req, res) => {
     res.status(400).end()
   }
 
-  const token = jwt.verify(getToken(req), process.env.SECRET)
+  const token = jwt.verify(req.token, process.env.SECRET)
   if(!token.id) {
     return res.status(401).json({ error: 'token invalid' })
   }
