@@ -137,6 +137,49 @@ describe('making blog posts', () => {
       .set('Authorization', `Bearer ${user.token}`)
       .expect(400)
   })
+
+  test('response status 401 when token is missing', async () => {
+    const dbAtStart = await blogsInDb()
+
+    await api
+      .post('/api/blogs')
+      .send({})
+      .expect(401)
+
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(res.body.length, dbAtStart.length)
+  })
+
+  test('response status 401 when token is malformed', async () => {
+    const dbAtStart = await blogsInDb()
+    const user = await createTestUser()
+
+    const newBlog = {
+      id: "123456789",
+      title: "This is a new blog post",
+      author: "Test author",
+      url: "https://www.google.com/",
+      likes: 0,
+      user: user.id
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization', `Bearer ${user.token}12`)
+      .expect(401)
+
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(res.body.length, dbAtStart.length)
+  })
 })
 
 describe('deleting blog posts', () => {
