@@ -144,7 +144,8 @@ const createTestUser = async () => {
   return {
     username: createdUser.body.username,
     id: createdUser.body.id,
-    token: userLoginData.body.token
+    token: userLoginData.body.token,
+    name: createdUser.body.name
   }
 }
 
