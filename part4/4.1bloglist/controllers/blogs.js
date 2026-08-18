@@ -14,6 +14,18 @@ blogsRouter.get('/', async (req, res) => {
   res.json(blogs)
 })
 
+blogsRouter.get('/:id', async (req, res) => {
+  const blog = await Blog
+    .findById(req.params.id)
+    .populate('user', { username: 1, name: 1 })
+
+  if (blog) {
+    res.json(blog)
+  } else {
+    res.status(404).end()
+  }
+})
+
 blogsRouter.post('/', userExtractor, async (req, res) => {
   if (req.body?.likes === undefined)
     req.body.likes = 0
@@ -49,21 +61,27 @@ blogsRouter.delete('/:id', userExtractor, async (req, res) => {
     res.status(204).end() // successful delete
 
   } catch (err) {
-    res.status(400).json({ error: err }) // blog id is malformatted
+    res.status(400).end() // blog id is malformatted
   }
 })
 
-blogsRouter.put('/', async (req, res) => {
+blogsRouter.put('/', userExtractor, async (req, res) => {
+  const user = req.user
   const blogId = req.body.id
   const updatedObj = {
     likes: req.body.likes
   }
 
   try {
-    const result = await Blog.findByIdAndUpdate(blogId, updatedObj)
-    if (!result) {
-      res.status(404).end() // blog doesn't exist
+    const blogToUpdate = await Blog.findById(blogId)
+    if (!blogToUpdate) {
+      res.status(404).json({ error: 'blog id does not exist' })
     }
+
+    if (user.id !== blogToUpdate.user.toString()) {
+      res.status(401).json({ error: 'user id that sent update request is not owner of blog' })
+    }
+    const result = await Blog.findByIdAndUpdate(blogId, updatedObj)
     res.status(200).end() // successful put
 
   } catch (err) {
