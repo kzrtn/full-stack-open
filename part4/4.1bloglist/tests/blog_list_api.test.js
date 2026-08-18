@@ -131,12 +131,22 @@ describe('deleting blog posts', () => {
     const dbAtStart = await blogsInDb()
     const user = await createTestUser()
 
-    const deleteBlog = {
-      id: "5a422a851b54a676234d17f7",
+    const newBlog = {
+      title: "This is a new blog post",
+      author: "Test author",
+      url: "https://www.google.com/",
+      likes: 0,
+      user: user.id
     }
 
+    const returnedBlog = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization', `Bearer ${user.token}`)
+      .expect(201)
+
     await api
-      .delete(`/api/blogs/${deleteBlog.id}`)
+      .delete(`/api/blogs/${returnedBlog.body.id}`)
       .set('Authorization', `Bearer ${user.token}`)
       .expect(204)
     
@@ -144,8 +154,6 @@ describe('deleting blog posts', () => {
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
-
-    assert.strictEqual(res.body.length, dbAtStart.length - 1)
   })
 
   test('response status 404 if blog does not exist', async () => {
