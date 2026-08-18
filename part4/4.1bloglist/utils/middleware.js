@@ -24,6 +24,8 @@ const errorHandler = (err, req, res, next) => {
     return res.status(400).json({ error: `Username already taken: ${err.message}` })
   } else if (err.name === 'CastError') {
     return res.status(400).json({ error: `Malformatted id: ${err.message}`})
+  } else if (err.name === 'JsonWebTokenError') {
+    return res.status(401).json({ error: `JWT token missing/invalid: ${err.message}`})
   }
 
   next(err)
