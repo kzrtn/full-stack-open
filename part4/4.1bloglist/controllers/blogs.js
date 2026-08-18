@@ -1,6 +1,7 @@
-const logger = require('../utils/logger.js')
-
 const blogsRouter = require('express').Router()
+const jwt = require('jsonwebtoken')
+
+const logger = require('../utils/logger.js')
 const Blog = require('../models/blog.js')
 const User = require('../models/user.js')
 
@@ -12,6 +13,15 @@ blogsRouter.get('/', async (req, res) => {
   res.json(blogs)
 })
 
+const getToken = req => {
+  const auth = req.get('authorization')
+
+  if (auth && auth.startsWith('Bearer ')) {
+    return auth.replace('Bearer ', '')
+  }
+  return null
+}
+
 blogsRouter.post('/', async (req, res) => {
   if (req.body?.likes === undefined)
     req.body.likes = 0
@@ -20,8 +30,12 @@ blogsRouter.post('/', async (req, res) => {
     res.status(400).end()
   }
 
-  const user = await User.findById(req.body.user)
+  const token = jwt.verify(getToken(req), process.env.SECRET)
+  if(!token.id) {
+    return res.status(401).json({ error: 'token invalid' })
+  }
 
+  const user = await User.findById(token.id)
   if (!user) {
     return res.status(400).json({ error: 'user ID is missing or not valid'})
   }
