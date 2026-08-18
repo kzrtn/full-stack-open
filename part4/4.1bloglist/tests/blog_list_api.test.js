@@ -4,7 +4,7 @@ const { describe, test, beforeEach, after } = require('node:test')
 const Blog = require('../models/blog.js')
 const User = require('../models/user.js')
 const app = require('../app.js')
-const { createSampleBlogs, blogsInDb } = require('./test_helper.js')
+const { createSampleBlogs, blogsInDb, createTestUser } = require('./test_helper.js')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 
@@ -41,7 +41,7 @@ describe('viewing blogs', () => {
 describe('making blog posts', () => {
   test('able to create a new blog post', async () => {
     const dbAtStart = await blogsInDb()
-    const user = await User.findOne({ username: 'root' })
+    const user = await createTestUser()
 
     const newBlog = {
       id: "123456789",
@@ -49,12 +49,13 @@ describe('making blog posts', () => {
       author: "Test author",
       url: "https://www.google.com/",
       likes: 0,
-      user: user._id
+      user: user.id
     }
 
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${user.token}`)
       .expect(201)
 
     const res = await api
@@ -66,7 +67,7 @@ describe('making blog posts', () => {
   })
 
   test('if likes is missing from post request, it defaults to 0', async () => {
-    const user = await User.findOne({ username: 'root' })
+    const user = await createTestUser()
 
     const newBlog = {
       title: "test post",
@@ -78,6 +79,7 @@ describe('making blog posts', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${user.token}`)
       .expect(201)
 
     const res = await api
@@ -90,7 +92,7 @@ describe('making blog posts', () => {
   })
 
   test('response status 400 when blog is missing title', async () => {
-    const user = await User.findOne({ username: 'root' })
+    const user = await createTestUser()
 
     const newBlog = {
       author: "wow",
@@ -102,11 +104,12 @@ describe('making blog posts', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${user.token}`)
       .expect(400)
   })
 
   test('response status 400 when blog is missing url', async () => {
-    const user = await User.findOne({ username: 'root' })
+    const user = await createTestUser()
 
     const newBlog = {
       title: "my title",
@@ -118,6 +121,7 @@ describe('making blog posts', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${user.token}`)
       .expect(400)
   })
 })
@@ -125,6 +129,7 @@ describe('making blog posts', () => {
 describe('deleting blog posts', () => {
   test('response status 204 for successful single deletion', async () => {
     const dbAtStart = await blogsInDb()
+    const user = await createTestUser()
 
     const deleteBlog = {
       id: "5a422a851b54a676234d17f7",
@@ -132,6 +137,7 @@ describe('deleting blog posts', () => {
 
     await api
       .delete(`/api/blogs/${deleteBlog.id}`)
+      .set('Authorization', `Bearer ${user.token}`)
       .expect(204)
     
     const res = await api
@@ -144,6 +150,7 @@ describe('deleting blog posts', () => {
 
   test('response status 404 if blog does not exist', async () => {
     const dbAtStart = await blogsInDb()
+    const user = await createTestUser()
 
     const deleteBlog = {
       id: "5a422a851b54a676234d1123",
@@ -151,6 +158,7 @@ describe('deleting blog posts', () => {
     
     await api
       .delete(`/api/blogs/${deleteBlog.id}`)
+      .set('Authorization', `Bearer ${user.token}`)
       .expect(404)
 
     const res = await api
@@ -163,6 +171,7 @@ describe('deleting blog posts', () => {
 
   test('response status 400 if id is not a valid ObjectId', async () => {
     const dbAtStart = await blogsInDb()
+    const user = await createTestUser()
 
     const deleteBlog = {
       id: 123,
@@ -170,6 +179,7 @@ describe('deleting blog posts', () => {
 
     await api
       .delete(`/api/blogs/${deleteBlog.id}`)
+      .set('Authorization', `Bearer ${user.token}`)
       .expect(400)
 
     const res = await api
@@ -183,7 +193,7 @@ describe('deleting blog posts', () => {
 
 describe('updating blog posts', () => {
   test('update single post', async () => {
-    const user = await User.findOne({ username: 'root' })
+    const user = await createTestUser()
 
     const postToUpdate = {
       id: "5a422a851b54a676234d17f7",
@@ -205,6 +215,7 @@ describe('updating blog posts', () => {
     await api
       .put(`/api/blogs/`)
       .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${user.token}`)
       .send(postToUpdate)
       .expect(200)
 
@@ -218,7 +229,7 @@ describe('updating blog posts', () => {
   })
 
   test('response status 404 when blog does not exist', async () => {
-    const user = await User.findOne({ username: 'root' })
+    const user = await createTestUser()
 
     const expectedPost = {
       id: "5a422a851b54a676234d17f7",
@@ -244,6 +255,7 @@ describe('updating blog posts', () => {
     await api
       .put(`/api/blogs/`)
       .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${user.token}`)
       .send(postToUpdate)
       .expect(404)
 
@@ -257,7 +269,7 @@ describe('updating blog posts', () => {
   })
 
   test('response status 404 when id is not a valid ObjectId', async () => {
-    const user = await User.findOne({ username: 'root' })
+    const user = await createTestUser()
 
     const expectedPost = {
       id: "5a422a851b54a676234d17f7",
@@ -275,6 +287,7 @@ describe('updating blog posts', () => {
     await api
       .put(`/api/blogs/`)
       .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${user.token}`)
       .send({})
       .expect(404)
 
