@@ -15,7 +15,7 @@ beforeEach(async () => {
 })
 
 describe('user logging in with', () => {
-  test.only('valid credentials receives status 200', async () => {
+  test('valid credentials receives status 200', async () => {
     const testUser = {
       username: 'root',
       password: 'admin@12333',
@@ -27,7 +27,7 @@ describe('user logging in with', () => {
       .expect(200)
   })
 
-  test.only('invalid credentials receives status 401', async () => {
+  test('invalid credentials receives status 401', async () => {
     const testUser = {
       username: 'root',
       password: 'admin@12',
