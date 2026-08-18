@@ -7,6 +7,7 @@ const app = require('../app.js')
 const { createSampleBlogs, blogsInDb, createTestUser } = require('./test_helper.js')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const { read } = require('node:fs')
 
 const api = supertest(app)
 
@@ -35,6 +36,18 @@ describe('viewing blogs', () => {
     for (const blog of res.body) {
       assert(blog?.id)
     }
+  })
+
+  test('returns a single blog', async () => {
+    const blog = (await blogsInDb())[0]
+    delete blog.user.blogs
+
+    const res = await api
+      .get(`/api/blogs/${ blog.id }`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.deepStrictEqual(res.body, blog)
   })
 })
 
@@ -203,18 +216,30 @@ describe('updating blog posts', () => {
   test('update single post', async () => {
     const user = await createTestUser()
 
-    const postToUpdate = {
-      id: "5a422a851b54a676234d17f7",
-      title: "React patterns",
-      author: "Michael Chan",
-      url: "https://reactpatterns.com/",
-      likes: 8,
+    const newBlog = {
+      title: "This is a new blog post",
+      author: "Test author",
+      url: "https://www.google.com/",
+      likes: 0,
+      user: user.id
+    }
+
+    const returnedBlog = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization', `Bearer ${user.token}`)
+      .expect(201)
+    
+    const updatedBlog = {
+      likes: 1,
+      id: returnedBlog.body.id
     }
 
     const expectedPost = {
-      ...postToUpdate,
+      ...newBlog,
+      ...updatedBlog,
       user: {
-        id: user._id.toString(),
+        id: user.id,
         name: user.name,
         username: user.username
       }
@@ -224,73 +249,66 @@ describe('updating blog posts', () => {
       .put(`/api/blogs/`)
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${user.token}`)
-      .send(postToUpdate)
+      .send(updatedBlog)
       .expect(200)
 
     const res = await api
-      .get('/api/blogs')
+      .get(`/api/blogs/${ updatedBlog.id }`)
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-    const resultPost = res.body.find(blog => blog.id === '5a422a851b54a676234d17f7')
-    assert.deepStrictEqual(expectedPost, resultPost)
+    assert.deepStrictEqual(res.body, expectedPost)
   })
 
   test('response status 404 when blog does not exist', async () => {
     const user = await createTestUser()
 
+    const newBlog = {
+      title: "This is a new blog post",
+      author: "Test author",
+      url: "https://www.google.com/",
+      likes: 0,
+      user: user.id
+    }
+
+    const returnedBlog = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization', `Bearer ${user.token}`)
+      .expect(201)
+    
+    const updatedBlog = {
+      likes: 1,
+      id: `6a844820d8b3366378b46123`
+    }
+
     const expectedPost = {
-      id: "5a422a851b54a676234d17f7",
-      title: "React patterns",
-      author: "Michael Chan",
-      url: "https://reactpatterns.com/",
-      likes: 7,
+      ...newBlog,
+      id: returnedBlog.body.id,
       user: {
-        id: user._id.toString(),
+        id: user.id,
         name: user.name,
         username: user.username
       }
-    }
-
-    const postToUpdate = {
-      id: "5a422a851b54a676234d1234",
-      title: "React patterns",
-      author: "Michael Chan",
-      url: "https://reactpatterns.com/",
-      likes: 8
     }
 
     await api
       .put(`/api/blogs/`)
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${user.token}`)
-      .send(postToUpdate)
+      .send(updatedBlog)
       .expect(404)
 
     const res = await api
-      .get('/api/blogs')
+      .get(`/api/blogs/${returnedBlog.body.id}`)
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-    const resultPost = res.body.find(blog => blog.id === '5a422a851b54a676234d17f7')
-    assert.deepStrictEqual(expectedPost, resultPost)
+    assert.deepStrictEqual(res.body, expectedPost)
   })
 
   test('response status 404 when id is not a valid ObjectId', async () => {
     const user = await createTestUser()
-
-    const expectedPost = {
-      id: "5a422a851b54a676234d17f7",
-      title: "React patterns",
-      author: "Michael Chan",
-      url: "https://reactpatterns.com/",
-      likes: 7,
-      user: {
-        id: user._id.toString(),
-        name: user.name,
-        username: user.username
-      }
-    }
 
     await api
       .put(`/api/blogs/`)
@@ -298,14 +316,6 @@ describe('updating blog posts', () => {
       .set('Authorization', `Bearer ${user.token}`)
       .send({})
       .expect(404)
-
-    const res = await api
-      .get('/api/blogs')
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-
-    const resultPost = res.body.find(blog => blog.id === '5a422a851b54a676234d17f7')
-    assert.deepStrictEqual(expectedPost, resultPost)
   })
 })
 
