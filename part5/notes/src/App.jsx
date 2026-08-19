@@ -83,11 +83,8 @@ const App = () => {
     setPassword('')
   }
 
-  return (
+  const loginForm = () => (
     <div>
-      <h1>Notes</h1>
-      <Notification message={errorMessage} />
-      
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
@@ -104,6 +101,29 @@ const App = () => {
         </div>
         <button type="submit">login</button>
       </form>
+    </div>
+  )
+
+  const noteForm = () => (
+    <form onSubmit={addNote}>
+      <input value={newNote} onChange={handleNoteChange} />
+      <button>save</button>
+    </form>
+  )
+
+  return (
+    <div>
+      <h1>Notes</h1>
+      <Notification message={errorMessage} />
+
+      {!user && loginForm()}
+      {user && (
+        <div>
+          <p>{user.name} logged in</p>
+          {noteForm()}
+        </div>
+      )}
+
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}
@@ -118,10 +138,7 @@ const App = () => {
           />
         )}
       </ul>
-      <form onSubmit={addNote}>
-        <input value={newNote} onChange={handleNoteChange} />
-        <button>save</button>
-      </form>
+
       <Footer />
     </div>
   )
