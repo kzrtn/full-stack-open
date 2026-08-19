@@ -4,6 +4,8 @@ import Notification from './components/Notification'
 import Footer from './components/Footer'
 import noteService from './services/notes'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import NoteForm from './components/NoteForm'
 
 const App = () => { 
   const [notes, setNotes] = useState([])
@@ -20,6 +22,15 @@ const App = () => {
       .then(initialNotes => {
         setNotes(initialNotes)
       })
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
   }, [])
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important == true)
@@ -73,6 +84,7 @@ const App = () => {
 
     try {
       const user = await loginService.login({ username, password })
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       noteService.setToken(user.token)
       setUser(user)
     } catch (error) {
@@ -84,44 +96,37 @@ const App = () => {
     setPassword('')
   }
 
-  const loginForm = () => (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>
-            username
-            <input type="text" value={username} onChange={({ target }) => setUsername(target.value)} />
-          </label>
-        </div>
-        <div>
-          <label>
-            password
-            <input type="password" value={password} onChange={({ target }) => setPassword(target.value)} />
-          </label>
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </div>
-  )
-
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange} />
-      <button>save</button>
-    </form>
-  )
+  const logout = () => {
+    window.localStorage.clear()
+    setUser(null)
+  }
 
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
 
-      {!user && loginForm()}
+      {!user && (
+        <LoginForm
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+          handleLogin={handleLogin}
+        />
+      )}
+
       {user && (
         <div>
-          <p>{user.name} logged in</p>
-          {noteForm()}
+          <p>
+          {user.name} logged in
+          <button onClick={logout}>Log out</button>
+          </p>
+          <NoteForm
+            addNote={addNote}
+            newNote={newNote}
+            handleNoteChange={handleNoteChange}
+          />
         </div>
       )}
 
