@@ -15,6 +15,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     noteService
@@ -101,20 +102,41 @@ const App = () => {
     setUser(null)
   }
 
+  const loginForm = () => {
+    const hidden = (
+      <div>
+        <button onClick={() => setLoginVisible(true)}>log in</button>
+      </div>
+    )
+
+    const visible = (
+      <div>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleLogin}
+        />
+        <button onClick={() => setLoginVisible(false)}>cancel</button>
+      </div>
+    )
+
+    const display = loginVisible ? visible : hidden
+
+    return (
+      <>
+        {display}
+      </>
+    )
+  }
+
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
 
-      {!user && (
-        <LoginForm
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-          handleLogin={handleLogin}
-        />
-      )}
+      {!user && loginForm()}
 
       {user && (
         <div>
