@@ -10,11 +10,9 @@ import Togglable from './components/Togglable'
 
 const App = () => { 
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -68,22 +66,17 @@ const App = () => {
       })
   }
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    console.log('logging in with', username, password)
-
+  const handleLogin = async (user) => {
     try {
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
-      noteService.setToken(user.token)
-      setUser(user)
+      const returnedUser = await loginService.login(user)
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(returnedUser))
+      noteService.setToken(returnedUser.token)
+      setUser(returnedUser)
     } catch (error) {
       setErrorMessage(`Invalid credentials: ${error}`)
       //Clears error message after 5 seconds
       setTimeout(() => setErrorMessage(null), 5000)
     }
-    setUsername('')
-    setPassword('')
   }
 
   const logout = () => {
@@ -98,22 +91,20 @@ const App = () => {
     </Togglable>
   )
 
+  const loginForm = () => (
+    <Togglable buttonLabel="Login">
+      <LoginForm
+        loginUser={handleLogin}
+      />
+    </Togglable>
+  )
+
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
 
-      {!user && (
-        <Togglable buttonLabel="Login">
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
-        </Togglable>
-      )}
+      {!user && loginForm()}
 
       {user && (
         <div>
