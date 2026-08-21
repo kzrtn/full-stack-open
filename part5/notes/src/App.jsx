@@ -6,6 +6,7 @@ import noteService from './services/notes'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import NoteForm from './components/NoteForm'
+import Togglable from './components/Togglable'
 
 const App = () => { 
   const [notes, setNotes] = useState([])
@@ -15,7 +16,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     noteService
@@ -59,24 +59,12 @@ const App = () => {
       })
   }
 
-  const addNote = (e) => {
-    e.preventDefault()
-    const noteObject = {
-      id: String(notes.length + 1),
-      content: newNote,
-      important: Math.random() < 0.5,
-    }
-
+  const addNote = (noteObject) => {
     noteService
       .create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
-        setNewNote('')
-    })
-  }
-
-  const handleNoteChange = (e) => {
-    setNewNote(e.target.value)
+      })
   }
 
   const handleLogin = async (e) => {
@@ -102,41 +90,22 @@ const App = () => {
     setUser(null)
   }
 
-  const loginForm = () => {
-    const hidden = (
-      <div>
-        <button onClick={() => setLoginVisible(true)}>log in</button>
-      </div>
-    )
-
-    const visible = (
-      <div>
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-        />
-        <button onClick={() => setLoginVisible(false)}>cancel</button>
-      </div>
-    )
-
-    const display = loginVisible ? visible : hidden
-
-    return (
-      <>
-        {display}
-      </>
-    )
-  }
-
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
 
-      {!user && loginForm()}
+      {!user && (
+        <Togglable buttonLabel="Login">
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
+      )}
 
       {user && (
         <div>
@@ -144,11 +113,9 @@ const App = () => {
           {user.name} logged in
           <button onClick={logout}>Log out</button>
           </p>
-          <NoteForm
-            addNote={addNote}
-            newNote={newNote}
-            handleNoteChange={handleNoteChange}
-          />
+          <Togglable buttonLabel='new note'>
+            <NoteForm createNote={addNote} />
+          </Togglable>
         </div>
       )}
 
