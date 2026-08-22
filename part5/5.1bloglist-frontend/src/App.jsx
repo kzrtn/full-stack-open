@@ -6,13 +6,13 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import Dropdown from './components/Dropdown'
 
 const IS_ERROR = true
 const NOT_ERROR = false
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  
   
   const [toast, setToast] = useState({
     error: null,
@@ -23,7 +23,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.toSorted((a, b) => b.likes - a.likes) )
     )  
   }, [])
 
@@ -60,7 +60,6 @@ const App = () => {
     } catch (error) {
       showNotification(IS_ERROR, `Invalid credentials. Error: ${error}`)
     }
-    
   }
 
   const submitNewBlog = async (blogFields) => {
@@ -92,6 +91,8 @@ const App = () => {
     }
   }
 
+
+
   return (
     <div>
       <h2>blogs</h2>
@@ -114,6 +115,8 @@ const App = () => {
           <Togglable buttonLabel="create new blog">
             <BlogForm blogService={submitNewBlog} />
           </Togglable>
+
+          <Dropdown blogs={blogs} setBlogs={setBlogs} />
           
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} blogService={updateBlog}/>
