@@ -4,17 +4,14 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm'
 
 const IS_ERROR = true
 const NOT_ERROR = false
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [blogFields, setBlogFields] = useState({
-    title: '',
-    author: '',
-    url: ''
-  })
+  
   
   const [toast, setToast] = useState({
     error: null,
@@ -65,8 +62,7 @@ const App = () => {
     
   }
 
-  const submitNewBlog = async (e) => {
-    e.preventDefault()
+  const submitNewBlog = async (blogFields) => {
     try {
       const res = await blogService.create(blogFields)
       setBlogs(blogs.concat(res))
@@ -74,11 +70,6 @@ const App = () => {
     } catch (error) {
       showNotification(IS_ERROR, `Failed to submit blog post. Error: ${error}`)
     }
-    setBlogFields({
-      title: '',
-      author: '',
-      url: ''
-    })
   }
 
   const logout = () => {
@@ -107,35 +98,7 @@ const App = () => {
             <button onClick={logout}>Log out</button>
           </p>
 
-          <div>
-            <form onSubmit={submitNewBlog}>
-              <div>
-                <label>
-                  title:
-                  <input type="text" value={blogFields.title}
-                    onChange={({target}) => setBlogFields({ ...blogFields, title: target.value })}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  author:
-                  <input type="text" value={blogFields.author}
-                    onChange={({target}) => setBlogFields({ ...blogFields, author: target.value })}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  url:
-                  <input type="text" value={blogFields.url}
-                    onChange={({target}) => setBlogFields({ ...blogFields, url: target.value })}
-                  />
-                </label>
-              </div>
-              <button type="submit">create</button>
-            </form>
-          </div>
+          <BlogForm blogService={submitNewBlog} />
 
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
