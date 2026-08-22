@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -14,13 +15,13 @@ const App = () => {
     author: '',
     url: ''
   })
-  const [password, setPassword] = useState("")
+  
   const [toast, setToast] = useState({
     error: null,
     message: null
   })
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState("")
+  
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -51,11 +52,9 @@ const App = () => {
     }, 5000)
   }
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
-
+  const handleLogin = async (userObj) => {
     try {
-      const user = await loginService.login({username, password})
+      const user = await loginService.login(userObj)
       setUser(user)
       blogService.setToken(user.token)
       window.localStorage.setItem('BlogAppUser', JSON.stringify(user))
@@ -63,8 +62,7 @@ const App = () => {
     } catch (error) {
       showNotification(IS_ERROR, `Invalid credentials. Error: ${error}`)
     }
-    setUsername('')
-    setPassword('')
+    
   }
 
   const submitNewBlog = async (e) => {
@@ -97,27 +95,9 @@ const App = () => {
         <Notification toast={toast} />
       )}
       {!user && (
-        <div>
-          <form onSubmit={handleLogin}>
-            <div>
-              <label>
-                username
-                <input type="text" value={username}
-                  onChange={({target}) => setUsername(target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                password
-                <input type="password" value={password}
-                  onChange={({target}) => setPassword(target.value)}
-                />
-              </label>
-            </div>
-            <button type="submit">Log in</button>
-          </form>
-        </div>
+        <LoginForm
+          loginService={handleLogin}
+        />
       )}
 
       {user && (
