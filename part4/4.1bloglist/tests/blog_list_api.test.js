@@ -289,7 +289,7 @@ describe('updating blog posts', () => {
     }
 
     await api
-      .put(`/api/blogs/`)
+      .put(`/api/blogs/${updatedBlog.id}`)
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${user.token}`)
       .send(updatedBlog)
@@ -336,7 +336,7 @@ describe('updating blog posts', () => {
     }
 
     await api
-      .put(`/api/blogs/`)
+      .put(`/api/blogs/${updatedBlog.id}`)
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${user.token}`)
       .send(updatedBlog)
