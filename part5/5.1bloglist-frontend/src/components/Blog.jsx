@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 
 const Blog = (props) => {
   const [blog, setBlog] = useState(props.blog)
+  let buttonLabel = ''
 
   const blogStyle = {
     paddingTop: 10,
@@ -12,10 +13,9 @@ const Blog = (props) => {
   }
 
   const [visibleDetails, setVisibleDetails] = useState(false)
-  const buttonLabel = useRef('view')
 
   const toggleDetails = () => {
-    buttonLabel.current = !visibleDetails ? 'hide' : 'view'
+    buttonLabel = !visibleDetails ? 'hide' : 'view'
     setVisibleDetails(!visibleDetails)
   }
 
@@ -37,7 +37,7 @@ const Blog = (props) => {
   return (
     <div style={blogStyle}>
       <b>{blog.title}</b> By {blog.author}
-      <button onClick={toggleDetails}>{buttonLabel.current}</button>
+      <button onClick={toggleDetails}>{buttonLabel}</button>
       {visibleDetails && (
         <>
           <div>{blog.url}</div>
