@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState } from 'react'
 
-const BlogForm = ({blogService}) => {
+const BlogForm = ({ blogService }) => {
   const [blogFields, setBlogFields] = useState({
     title: '',
     author: '',
@@ -24,7 +24,7 @@ const BlogForm = ({blogService}) => {
           <label>
             title:
             <input type="text" value={blogFields.title}
-              onChange={({target}) => setBlogFields({ ...blogFields, title: target.value })}
+              onChange={({ target }) => setBlogFields({ ...blogFields, title: target.value })}
             />
           </label>
         </div>
@@ -32,7 +32,7 @@ const BlogForm = ({blogService}) => {
           <label>
             author:
             <input type="text" value={blogFields.author}
-              onChange={({target}) => setBlogFields({ ...blogFields, author: target.value })}
+              onChange={({ target }) => setBlogFields({ ...blogFields, author: target.value })}
             />
           </label>
         </div>
@@ -40,7 +40,7 @@ const BlogForm = ({blogService}) => {
           <label>
             url:
             <input type="text" value={blogFields.url}
-              onChange={({target}) => setBlogFields({ ...blogFields, url: target.value })}
+              onChange={({ target }) => setBlogFields({ ...blogFields, url: target.value })}
             />
           </label>
         </div>

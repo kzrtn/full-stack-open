@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef } from 'react'
 
 const Blog = (props) => {
   const [blog, setBlog] = useState(props.blog)
@@ -30,7 +30,7 @@ const Blog = (props) => {
 
   const deleteBlog = () => {
     const confirmDelete = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
-    if (confirmDelete) 
+    if (confirmDelete)
       props.deleteService(blog)
   }
 
@@ -39,7 +39,7 @@ const Blog = (props) => {
       <b>{blog.title}</b> By {blog.author}
       <button onClick={toggleDetails}>{buttonLabel.current}</button>
       {visibleDetails && (
-          <>
+        <>
           <div>{blog.url}</div>
           <div>
             likes {blog.likes}
@@ -47,9 +47,8 @@ const Blog = (props) => {
           </div>
           <div>{blog.author}</div>
           <button onClick={deleteBlog}>remove</button>
-          </>
-        )
-      }
+        </>
+      )}
     </div>
   )
 }

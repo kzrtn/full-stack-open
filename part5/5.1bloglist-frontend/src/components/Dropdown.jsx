@@ -2,11 +2,11 @@ const Dropdown = ({ blogs, setBlogs }) => {
   const changeSort = e => {
     const selectedOption = e.target.value
     switch (selectedOption) {
-      case "likes":
-        setBlogs(blogs.toSorted((a, b) => b.likes - a.likes))
-        break
-      default:
-        setBlogs(blogs.toSorted((a, b) => a[selectedOption].toUpperCase() < b[selectedOption].toUpperCase() ? -1 : 1))
+    case 'likes':
+      setBlogs(blogs.toSorted((a, b) => b.likes - a.likes))
+      break
+    default:
+      setBlogs(blogs.toSorted((a, b) => a[selectedOption].toUpperCase() < b[selectedOption].toUpperCase() ? -1 : 1))
     }
   }
 

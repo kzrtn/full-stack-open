@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const Togglable = (props) => {
   const [visible, setVisible] = useState(false)
@@ -11,10 +11,10 @@ const Togglable = (props) => {
     <>
       {!visible ?(
         <button onClick={toggleVisible}>{props.buttonLabel}</button>)
-      :(<>
-        {props.children}
-        <button onClick={toggleVisible}>cancel</button>
-      </>)}
+        :(<>
+          {props.children}
+          <button onClick={toggleVisible}>cancel</button>
+        </>)}
     </>
   )
 }

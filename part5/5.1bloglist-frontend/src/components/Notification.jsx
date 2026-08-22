@@ -1,4 +1,4 @@
-const Notification = ({toast}) => {
+const Notification = ({ toast }) => {
   let mystyle = {
     color: 'green',
     background: 'lightgrey',

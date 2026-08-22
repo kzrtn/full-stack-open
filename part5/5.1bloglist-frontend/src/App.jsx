@@ -13,18 +13,16 @@ const NOT_ERROR = false
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  
   const [toast, setToast] = useState({
     error: null,
     message: null
   })
   const [user, setUser] = useState(null)
-  
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs.toSorted((a, b) => b.likes - a.likes) )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -76,13 +74,13 @@ const App = () => {
     setUser(null)
     blogService.setToken(null)
     window.localStorage.removeItem('BlogAppUser')
-    showNotification(NOT_ERROR, `Successfully logged out.`)
+    showNotification(NOT_ERROR, 'Successfully logged out.')
   }
 
   const updateBlog = async (updatedBlog) => {
     try {
       const res = await blogService.addLike(updatedBlog)
-      setBlogs(blogs.map(blog => 
+      setBlogs(blogs.map(blog =>
         blog.id === res.id ? res : blog
       ))
       showNotification(NOT_ERROR, `Liked "${updatedBlog.title}" By "${updatedBlog.author}"`)
@@ -125,7 +123,7 @@ const App = () => {
           </Togglable>
 
           <Dropdown blogs={blogs} setBlogs={setBlogs} />
-          
+
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} blogService={updateBlog} deleteService={deleteBlog} />
           )}

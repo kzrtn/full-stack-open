@@ -1,12 +1,12 @@
-import { useState } from "react"
+import { useState } from 'react'
 
-const LoginForm = ({loginService}) => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+const LoginForm = ({ loginService }) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleLogin = e => {
     e.preventDefault()
-    loginService({username, password})
+    loginService({ username, password })
     setUsername('')
     setPassword('')
   }
@@ -18,7 +18,7 @@ const LoginForm = ({loginService}) => {
           <label>
             username
             <input type="text" value={username}
-              onChange={({target}) => setUsername(target.value)}
+              onChange={({ target }) => setUsername(target.value)}
             />
           </label>
         </div>
@@ -26,7 +26,7 @@ const LoginForm = ({loginService}) => {
           <label>
             password
             <input type="password" value={password}
-              onChange={({target}) => setPassword(target.value)}
+              onChange={({ target }) => setPassword(target.value)}
             />
           </label>
         </div>
