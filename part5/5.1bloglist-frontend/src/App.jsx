@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const IS_ERROR = true
 const NOT_ERROR = false
@@ -98,8 +99,10 @@ const App = () => {
             <button onClick={logout}>Log out</button>
           </p>
 
-          <BlogForm blogService={submitNewBlog} />
-
+          <Togglable buttonLabel="create new blog">
+            <BlogForm blogService={submitNewBlog} />
+          </Togglable>
+          
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
