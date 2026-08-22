@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -91,7 +91,15 @@ const App = () => {
     }
   }
 
-
+  const deleteBlog = async (blogToDelete) => {
+    try {
+      await blogService.deleteBlog(blogToDelete)
+      setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id))
+      showNotification(NOT_ERROR, `Deleted "${blogToDelete.title}" By "${blogToDelete.author}"`)
+    } catch (error) {
+      showNotification(IS_ERROR, `Failed to delete blog post. Error: ${error}`)
+    }
+  }
 
   return (
     <div>
@@ -119,7 +127,7 @@ const App = () => {
           <Dropdown blogs={blogs} setBlogs={setBlogs} />
           
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} blogService={updateBlog}/>
+            <Blog key={blog.id} blog={blog} blogService={updateBlog} deleteService={deleteBlog} />
           )}
         </div>
       )}

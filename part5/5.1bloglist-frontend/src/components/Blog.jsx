@@ -28,6 +28,12 @@ const Blog = (props) => {
     props.blogService(updatedBlog)
   }
 
+  const deleteBlog = () => {
+    const confirmDelete = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
+    if (confirmDelete) 
+      props.deleteService(blog)
+  }
+
   return (
     <div style={blogStyle}>
       <b>{blog.title}</b> By {blog.author}
@@ -40,6 +46,7 @@ const Blog = (props) => {
             <button onClick={addLike}>like</button>
           </div>
           <div>{blog.author}</div>
+          <button onClick={deleteBlog}>remove</button>
           </>
         )
       }
