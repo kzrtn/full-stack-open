@@ -82,7 +82,7 @@ blogsRouter.put('/', userExtractor, async (req, res) => {
       res.status(401).json({ error: 'user id that sent update request is not owner of blog' })
     }
     const result = await Blog.findByIdAndUpdate(blogId, updatedObj)
-    res.status(200).end() // successful put
+    res.status(200).json(result) // successful put
 
   } catch (err) {
     res.status(400).end() // blog id is malformatted
