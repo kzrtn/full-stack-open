@@ -1,6 +1,8 @@
 import { useState, useRef } from "react"
 
-const Blog = ({ blog }) => {
+const Blog = (props) => {
+  const [blog, setBlog] = useState(props.blog)
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -17,6 +19,15 @@ const Blog = ({ blog }) => {
     setVisibleDetails(!visibleDetails)
   }
 
+  const addLike = () => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+    setBlog(updatedBlog)
+    props.blogService(updatedBlog)
+  }
+
   return (
     <div style={blogStyle}>
       <b>{blog.title}</b> By {blog.author}
@@ -26,7 +37,7 @@ const Blog = ({ blog }) => {
           <div>{blog.url}</div>
           <div>
             likes {blog.likes}
-            <button>like</button>
+            <button onClick={addLike}>like</button>
           </div>
           <div>{blog.author}</div>
           </>

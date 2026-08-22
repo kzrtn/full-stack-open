@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -80,6 +80,18 @@ const App = () => {
     showNotification(NOT_ERROR, `Successfully logged out.`)
   }
 
+  const updateBlog = async (updatedBlog) => {
+    try {
+      const res = await blogService.addLike(updatedBlog)
+      setBlogs(blogs.map(blog => 
+        blog.id === res.id ? res : blog
+      ))
+      showNotification(NOT_ERROR, `Liked "${updatedBlog.title}" By "${updatedBlog.author}"`)
+    } catch (error) {
+      showNotification(IS_ERROR, `Failed to like blog post. Error: ${error}`)
+    }
+  }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -104,7 +116,7 @@ const App = () => {
           </Togglable>
           
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} blogService={updateBlog}/>
           )}
         </div>
       )}
