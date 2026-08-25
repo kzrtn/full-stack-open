@@ -28,6 +28,11 @@ app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
+
+if(process.env.NODE = 'test') {
+  const testRouter = require('./controllers/tests.js')
+  app.use('/api/test', testRouter)
+}
 app.use(middleware.errorHandler)
 
 module.exports = app
