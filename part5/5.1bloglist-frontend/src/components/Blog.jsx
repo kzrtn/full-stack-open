@@ -38,7 +38,7 @@ const Blog = (props) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div data-testid="blog" style={blogStyle}>
       <b>{blog.title}</b> By {blog.author}
       <button onClick={toggleDetails}>{buttonLabel}</button>
       {visibleDetails && (
