@@ -9,7 +9,7 @@ const createNote = async (page, contents) => {
   await page.getByRole('button', { name: 'new note' }).click()
   await page.getByRole('textbox').fill(contents)
   await page.getByRole('button', { name: 'save'}).click()
-  await page.getByText(content).waitFor()
+  await page.getByText(contents).waitFor()
 }
 
 export { loginWith, createNote }
