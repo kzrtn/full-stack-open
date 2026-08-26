@@ -3,6 +3,7 @@ import { useState } from 'react'
 const Blog = (props) => {
   const [blog, setBlog] = useState(props.blog)
   let buttonLabel = 'view'
+  console.log()
 
   const blogStyle = {
     paddingTop: 10,
@@ -16,6 +17,8 @@ const Blog = (props) => {
 
   const toggleDetails = () => {
     buttonLabel = !visibleDetails ? 'hide' : 'view'
+    console.log(props.blog.user.id)
+    console.log(props.user)
     setVisibleDetails(!visibleDetails)
   }
 
@@ -46,7 +49,7 @@ const Blog = (props) => {
             <button onClick={addLike}>like</button>
           </div>
           <div>{blog.author}</div>
-          <button onClick={deleteBlog}>remove</button>
+          {props.blog.user.id === props.user.id ? <button onClick={deleteBlog}>remove</button> : <></>}
         </>
       )}
     </div>
