@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const BlogForm = ({ blogService }) => {
   const [blogFields, setBlogFields] = useState({
@@ -6,6 +7,7 @@ const BlogForm = ({ blogService }) => {
     author: '',
     url: ''
   })
+  const navigate = useNavigate()
 
   const submitNewBlog = e => {
     e.preventDefault()
@@ -15,6 +17,7 @@ const BlogForm = ({ blogService }) => {
       author: '',
       url: ''
     })
+    navigate('/')
   }
 
   return (

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link
+  Routes, Route, Link,
+  useMatch
 } from 'react-router-dom'
 
 import blogService from './services/blogs'
@@ -111,6 +112,9 @@ const App = () => {
     padding: 5
   }
 
+  const match = useMatch('/blog/:id')
+  const blog = match ? blogs.find(b => b.id === match.params.id) : null
+
   return (
     <>
       <div>
@@ -122,20 +126,32 @@ const App = () => {
         )}
       </div>
       <Routes>
+        <Route path = "/blog/:id" element={
+          <Blog
+            blog={blog}
+            user={user}
+            updateService={updateBlog}
+            deleteService={deleteBlog}
+          />
+        } />
+
         <Route path="/" element={
           <BlogList
             blogs={blogs}
             setBlogs={setBlogs}
             toast={toast}
-            user={user}
-            updateBlog={updateBlog}
-            deleteBlog={deleteBlog}
           />
         } />
 
         <Route path="/login" element={
           <LoginForm
             loginService={handleLogin}
+          />
+        } />
+
+        <Route path="/create" element={
+          <BlogForm
+            blogService={submitNewBlog}
           />
         } />
       </Routes>

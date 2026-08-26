@@ -1,13 +1,8 @@
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link
-} from 'react-router-dom'
-
-import Blog from './Blog'
 import Dropdown from './Dropdown'
 import Notification from './Notification'
+import { Link } from 'react-router-dom'
 
-const BlogList = ({ blogs, setBlogs, toast, user, updateBlog, deleteBlog }) => {
+const BlogList = ({ blogs, setBlogs, toast }) => {
   return (
     <div>
       <h2>blogs</h2>
@@ -16,9 +11,11 @@ const BlogList = ({ blogs, setBlogs, toast, user, updateBlog, deleteBlog }) => {
       )}
       <div>
         <Dropdown blogs={blogs} setBlogs={setBlogs} />
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} blogService={updateBlog} deleteService={deleteBlog} />
-        )}
+        <ul>
+          {blogs.map(blog =>
+            <li key={blog.id}><Link to={`blog/${blog.id}`}>{blog.title}</Link></li>
+          )}
+        </ul>
       </div>
     </div>
   )
