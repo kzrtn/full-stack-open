@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 /*
 const promise2 = axios.get('http://localhost:3001/foobar')
@@ -26,4 +27,8 @@ const notes = [
 ]
 */
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <Router>
+    <App />
+  </Router>
+)

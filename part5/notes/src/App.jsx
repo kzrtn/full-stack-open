@@ -3,7 +3,8 @@ import noteService from './services/notes'
 
 import {
   BrowserRouter as Router,
-  Routes, Route, Link
+  Routes, Route, Link,
+  useMatch
 } from 'react-router-dom'
 
 import Home from './components/Home'
@@ -65,8 +66,13 @@ const App = () => {
     padding: 5
   }
 
+  const match = useMatch('/notes/:id')
+  const note = match
+    ? notes.find(note => note.id === match.params.id)
+    : null
+
   return (
-    <Router>
+    <>
       <div>
         <Link style={padding} to="/">home</Link>
         <Link style={padding} to="/notes">notes</Link>
@@ -76,7 +82,7 @@ const App = () => {
       <Routes>
         <Route path="/notes/:id" element={
           <Note
-            notes={notes}
+            note={note}
             toggleImportanceOf={toggleImportanceOf}
             deleteNote={deleteNote}
           />
@@ -92,7 +98,7 @@ const App = () => {
         } />
       </Routes>
       <Footer />
-    </Router>
+    </>
   )
 }
 

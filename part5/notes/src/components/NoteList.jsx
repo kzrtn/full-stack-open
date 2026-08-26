@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import Note from './Note'
 import Notification from './Notification'
 import LoginForm from './LoginForm'
-import Footer from './Footer'
 import Togglable from './Togglable'
 import noteService from '../services/notes'
 import loginService from '../services/login'
@@ -66,7 +64,7 @@ const NoteList = ({ notes }) => {
     setUser(null)
   }
 
-  const noteFormRef = useRef()
+  //const noteFormRef = useRef()
 
   const loginForm = () => (
     <Togglable buttonLabel="Login">
