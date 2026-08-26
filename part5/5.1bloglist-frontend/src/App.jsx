@@ -125,7 +125,7 @@ const App = () => {
           <Dropdown blogs={blogs} setBlogs={setBlogs} />
 
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} blogService={updateBlog} deleteService={deleteBlog} />
+            <Blog key={blog.id} blog={blog} user={user} blogService={updateBlog} deleteService={deleteBlog} />
           )}
         </div>
       )}
