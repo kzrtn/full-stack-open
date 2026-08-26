@@ -24,8 +24,11 @@ describe('Blog app', () => {
   })
 
   describe('Login', () => {
-    test('succeeds with correct credentials', async ({ page }) => {
+    beforeEach(async ({ page }) => {
       await loginWith(page, 'root', 'Password@123')
+    })
+
+    test('succeeds with correct credentials', async ({ page }) => {
       await expect(page.getByText('John Smith is logged in')).toBeVisible()
     })
 
@@ -35,10 +38,6 @@ describe('Blog app', () => {
     })
 
     describe('When logged in', () => {
-      beforeEach(async ({ page }) => {
-        await loginWith(page, 'root', 'Password@123')
-      })
-
       test('a new blog can be created', async ({ page }) => {
         await createBlog(page, 'test', 'testAuthor', 'google.com')
         await expect(page.getByText('test')).toBeVisible
@@ -48,13 +47,68 @@ describe('Blog app', () => {
       describe('with one post', () => {
         beforeEach(async ({ page }) => {
           await createBlog(page, 'test', 'testAuthor', 'google.com')
+          await page.goto('/')
         })
 
-        test.only('post can be liked', async ({ page }) => {
+        test('post can be liked', async ({ page }) => {
           const element = page.getByText('by testAuthor')
           await element.getByRole('button', { name: 'view' }).click()
           await page.getByRole('button', { name: 'like' }).click()
           await expect(page.getByText('likes 1')).toBeVisible()
+        })
+
+        test('blogs are sorted according to likes', async ({ page, request }) => {
+          await createBlog(page, 'secondBlog', 'secondAuthor', 'google2.com')
+          // Like the first post twice
+          const element = page.getByText('by testAuthor')
+          await element.getByRole('button', { name: 'view' }).click()
+          await page.getByRole('button', { name: 'like' }).click()
+          await page.getByRole('button', { name: 'like' }).click()
+          await page.goto('/')
+
+          // Then locate multiple divs
+          await expect(page.getByTestId('blog').nth(0)).toContainText('test By testAuthor')
+          await expect(page.getByTestId('blog').nth(1)).toContainText('secondBlog By secondAuthor')
+        })
+
+        test('post can be deleted', async ({ page }) => {
+          page.on('dialog', dialog => dialog.accept())
+          const element = page.getByText('by testAuthor')
+          await element.getByRole('button', { name: 'view' }).click()
+          await page.getByRole('button', { name: 'remove' }).click()
+          await page.getByText('Deleted').waitFor()
+          await expect(page.getByText('by testAuthor')).not.toBeVisible()
+        })
+
+        describe('with two users', () => {
+          beforeEach(async ({ page, request }) => {
+            await request.post('/api/users',
+              {
+                data: {
+                  name: 'Jane Doe',
+                  username: 'root2',
+                  password: 'Password@123'
+                }
+              }
+            )
+            await page.goto('/')
+          })
+
+          test('only the blog post owner can see the delete button', async ({ page }) => {
+            await expect(page.getByText('John Smith is logged in')).toBeVisible()
+            const element = page.getByText('by testAuthor')
+            await element.getByRole('button', { name: 'view' }).click()
+            await expect(page.getByRole('button', { name: 'remove' })).toBeVisible()
+          })
+
+          test('non blog owner cannot see the delete button', async ({ page }) => {
+            await page.getByRole('button', { name: 'Log out' }).click()
+            await loginWith(page, 'root2', 'Password@123')
+            await expect(page.getByText('Jane Doe is logged in')).toBeVisible()
+            const element = page.getByText('by testAuthor')
+            await element.getByRole('button', { name: 'view' }).click()
+            await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+          })
         })
       })
     })
