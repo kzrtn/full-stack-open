@@ -3,7 +3,6 @@ import { useState } from 'react'
 const Blog = (props) => {
   const [blog, setBlog] = useState(props.blog)
   let buttonLabel = 'view'
-  console.log()
 
   const blogStyle = {
     paddingTop: 10,

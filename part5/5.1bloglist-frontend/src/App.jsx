@@ -13,6 +13,7 @@ import Dropdown from './components/Dropdown'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import BlogList from './components/BlogList'
 
 
 const IS_ERROR = true
@@ -106,37 +107,39 @@ const App = () => {
     }
   }
 
+  const padding = {
+    padding: 5
+  }
+
   return (
-    <div>
-      <h2>blogs</h2>
-      {toast.message && (
-        <Notification toast={toast} />
-      )}
-      {!user && (
-        <LoginForm
-          loginService={handleLogin}
-        />
-      )}
+    <>
+      <div>
+        <Link style={padding} to="/">blogs</Link>
+        <Link style={padding} to="/login">login</Link>
+        <Link style={padding} to="/create">new blog</Link>
+        {user && (
+          <button onClick={logout}>logout</button>
+        )}
+      </div>
+      <Routes>
+        <Route path="/" element={
+          <BlogList
+            blogs={blogs}
+            setBlogs={setBlogs}
+            toast={toast}
+            user={user}
+            updateBlog={updateBlog}
+            deleteBlog={deleteBlog}
+          />
+        } />
 
-      {user && (
-        <div>
-          <p>
-            {user.name} is logged in.
-            <button onClick={logout}>Log out</button>
-          </p>
-
-          <Togglable buttonLabel="create new blog">
-            <BlogForm blogService={submitNewBlog} />
-          </Togglable>
-
-          <Dropdown blogs={blogs} setBlogs={setBlogs} />
-
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} user={user} blogService={updateBlog} deleteService={deleteBlog} />
-          )}
-        </div>
-      )}
-    </div>
+        <Route path="/login" element={
+          <LoginForm
+            loginService={handleLogin}
+          />
+        } />
+      </Routes>
+    </>
   )
 }
 
