@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  BrowserRouter as Router,
   Routes, Route, Link,
   useMatch
 } from 'react-router-dom'
@@ -10,12 +9,8 @@ import loginService from './services/login'
 
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
-import Dropdown from './components/Dropdown'
 import LoginForm from './components/LoginForm'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
 import BlogList from './components/BlogList'
-
 
 const IS_ERROR = true
 const NOT_ERROR = false
@@ -119,8 +114,12 @@ const App = () => {
     <>
       <div>
         <Link style={padding} to="/">blogs</Link>
-        {!user && <Link style={padding} to="/login">login</Link>}
-        <Link style={padding} to="/create">new blog</Link>
+        {!user && (
+          <Link style={padding} to="/login">login</Link>
+        )}
+        {user && (
+          <Link style={padding} to="/create">new blog</Link>
+        )}
         {user && (
           <button onClick={logout}>logout</button>
         )}
