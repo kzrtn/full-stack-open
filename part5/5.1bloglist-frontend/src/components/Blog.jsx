@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Blog = (props) => {
-  const [blog, setBlog] = useState(null)
+  const [blog, setBlog] = useState(props.blog)
   const navigate = useNavigate()
 
   if (!blog && props.blog) {
@@ -54,7 +54,9 @@ const Blog = (props) => {
       <div><Link to={link}>{blog.url}</Link></div>
       <div>
         likes {blog.likes}
-        <button onClick={addLike}>like</button>
+        {props.user && (
+          <button onClick={addLike}>like</button>
+        )}
       </div>
       <div>Added by {blog.user.name}</div>
       {props.user && removeButton()}
