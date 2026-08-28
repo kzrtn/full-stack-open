@@ -1,5 +1,9 @@
 import { test, expect, beforeEach, describe, vi } from 'vitest'
 import { screen, render } from '@testing-library/react'
+import {
+  BrowserRouter as Router,
+  Routes, Route
+} from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
 import BlogForm from './BlogForm'
 
@@ -12,7 +16,18 @@ const mockBlog = {
 
 describe('<BlogForm />', () => {
   beforeEach(() => {
-    render(<BlogForm blogService={mockBlogService} />)
+    render(
+      <Router>
+        <Routes>
+          <Route path = "/" element={
+            <BlogForm
+              blogService={mockBlogService}
+            />
+          } />
+        </Routes>
+      </Router>
+    )
+    //render(<BlogForm blogService={mockBlogService} />)
   })
 
   test('BlogForm calls event handler on submit and sends correct data', async () => {
