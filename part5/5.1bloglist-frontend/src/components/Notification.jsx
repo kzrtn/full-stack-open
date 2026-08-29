@@ -1,4 +1,12 @@
+import { Alert } from '@mui/material'
+import styled from 'styled-components'
+
+const StyledAlert = styled(Alert)`
+  margin-bottom: 0.5rem;
+`
+
 const Notification = ({ toast }) => {
+  /*
   let mystyle = {
     color: 'green',
     background: 'lightgrey',
@@ -20,6 +28,13 @@ const Notification = ({ toast }) => {
     <div style={mystyle}>
       <p>{toast.message}</p>
     </div>
+  )
+  */
+
+  return(
+    <StyledAlert severity={toast.type}>
+      {toast.message}
+    </StyledAlert>
   )
 }
 
