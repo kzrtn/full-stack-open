@@ -13,10 +13,11 @@ import Footer from './components/Footer'
 import Note from './components/Note'
 import NoteList from './components/NoteList'
 import NoteForm from './components/NoteForm'
+import Notification from './components/Notification'
 
 const App = () => { 
   const [notes, setNotes] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     noteService
@@ -32,6 +33,11 @@ const App = () => {
       .create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
+        setNotification({
+          text: `Note '${returnedNote.content}' added!`,
+          type: 'success'
+        })
+        setTimeout(() => setNotification(null), 5000)
       })
   }
 
@@ -46,13 +52,11 @@ const App = () => {
         setNotes(notes.map(note => note.id === id ? returnedNote : note))
       })
       .catch(error => {
-        setErrorMessage(
-          `Note '${note.content}' was already deleted from the server: ${error}`
-        )
-        //Clears error message after 5 seconds
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        setNotification({
+          text: `Note '${note.content}' was already deleted from the server: ${error}`,
+          type: 'error'
+        })
+          setTimeout(() => setNotification(null), 5000)
         //Updates notes array to exclude the already deleted note
         setNotes(notes.filter(n => n.id !== id))
       })
@@ -61,6 +65,11 @@ const App = () => {
   const deleteNote = async (id) => {
     await noteService.remove(id)
     setNotes(notes.filter(n => n.id !== id))
+    setNotification({
+      text: `Successfully deleted note.`,
+      type: 'success'
+    })
+    setTimeout(() => setNotification(null), 5000)
   }
 
   const padding = {
@@ -79,7 +88,7 @@ const App = () => {
         <Link style={padding} to="/notes">notes</Link>
         <Link style={padding} to="/create">new note</Link>
       </div>
-
+      <Notification notification={notification} />
       <Routes>
         <Route path="/notes/:id" element={
           <Note
@@ -89,7 +98,7 @@ const App = () => {
           />
         } />
         <Route path="/notes" element={
-          <NoteList notes={notes} />
+          <NoteList notes={notes} setNotification={setNotification} />
         } />
         <Route path="/create" element={
           <NoteForm createNote={addNote} />

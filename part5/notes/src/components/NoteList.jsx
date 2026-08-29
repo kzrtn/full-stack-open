@@ -2,16 +2,13 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
-import Notification from './Notification'
 import LoginForm from './LoginForm'
 import Togglable from './Togglable'
 import noteService from '../services/notes'
 import loginService from '../services/login'
 
-const NoteList = ({ notes }) => { 
+const NoteList = ({ notes, setNotification }) => { 
   const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState(null)
-
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -32,9 +29,12 @@ const NoteList = ({ notes }) => {
       noteService.setToken(returnedUser.token)
       setUser(returnedUser)
     } catch (error) {
-      setErrorMessage(`Invalid credentials: ${error}`)
+      setNotification({
+        text: `Invalid credentials: ${error}`,
+        type: 'error'
+      })
       //Clears error message after 5 seconds
-      setTimeout(() => setErrorMessage(null), 5000)
+      setTimeout(() => setNotification(null), 5000)
     }
   }
 
@@ -56,7 +56,6 @@ const NoteList = ({ notes }) => {
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={errorMessage} />
 
       {!user && loginForm()}
 
