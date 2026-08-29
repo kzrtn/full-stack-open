@@ -2,7 +2,7 @@ import { Alert } from '@mui/material'
 import styled from 'styled-components'
 
 const StyledAlert = styled(Alert)`
-  margin-bottom: 0.5rem;
+  margin-top: 1rem;
 `
 
 const Notification = ({ toast }) => {

@@ -18,16 +18,19 @@ import loginService from './services/login'
 
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
-import LoginForm from './components/LoginForm'
 import BlogList from './components/BlogList'
+import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
 
+/*
 const IS_ERROR = true
 const NOT_ERROR = false
+*/
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [toast, setToast] = useState({
-    error: null,
+    type: null,
     message: null
   })
   const [user, setUser] = useState(null)
@@ -47,15 +50,12 @@ const App = () => {
     }
   }, [])
 
-  const showNotification = (isError, message) => {
-    setToast({
-      error: isError,
-      message: message
-    })
+  const showNotification = (type, message) => {
+    setToast({ type, message })
 
     setTimeout(() => {
       setToast({
-        error: null,
+        type: null,
         message: null
       })
     }, 5000)
@@ -67,9 +67,9 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
       window.localStorage.setItem('BlogAppUser', JSON.stringify(user))
-      showNotification(NOT_ERROR, `${user.name} successfully logged in.`)
+      showNotification('success', `${user.name} successfully logged in.`)
     } catch (error) {
-      showNotification(IS_ERROR, `Invalid credentials. Error: ${error}`)
+      showNotification('error', `Invalid credentials. Error: ${error}`)
     }
   }
 
@@ -77,9 +77,9 @@ const App = () => {
     try {
       const res = await blogService.create(blogFields)
       setBlogs(blogs.concat(res))
-      showNotification(NOT_ERROR, `Added new blog titled "${blogFields.title}" By "${blogFields.author}"`)
+      showNotification('success', `Added new blog titled "${blogFields.title}" By "${blogFields.author}"`)
     } catch (error) {
-      showNotification(IS_ERROR, `Failed to submit blog post. Error: ${error}`)
+      showNotification('error', `Failed to submit blog post. Error: ${error}`)
     }
   }
 
@@ -87,7 +87,7 @@ const App = () => {
     setUser(null)
     blogService.setToken(null)
     window.localStorage.removeItem('BlogAppUser')
-    showNotification(NOT_ERROR, 'Successfully logged out.')
+    showNotification('success', 'Successfully logged out.')
   }
 
   const updateBlog = async (updatedBlog) => {
@@ -96,9 +96,9 @@ const App = () => {
       setBlogs(blogs.map(blog =>
         blog.id === res.id ? res : blog
       ))
-      showNotification(NOT_ERROR, `Liked "${updatedBlog.title}" By "${updatedBlog.author}"`)
+      showNotification('success', `Liked "${updatedBlog.title}" By "${updatedBlog.author}"`)
     } catch (error) {
-      showNotification(IS_ERROR, `Failed to like blog post. Error: ${error}`)
+      showNotification('error', `Failed to like blog post. Error: ${error}`)
     }
   }
 
@@ -106,9 +106,9 @@ const App = () => {
     try {
       await blogService.deleteBlog(blogToDelete)
       setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id))
-      showNotification(NOT_ERROR, `Deleted "${blogToDelete.title}" By "${blogToDelete.author}"`)
+      showNotification('success', `Deleted "${blogToDelete.title}" By "${blogToDelete.author}"`)
     } catch (error) {
-      showNotification(IS_ERROR, `Failed to delete blog post. Error: ${error}`)
+      showNotification('error', `Failed to delete blog post. Error: ${error}`)
     }
   }
 
@@ -150,6 +150,7 @@ const App = () => {
           )}
         </Toolbar>
       </AppBar>
+      {toast.message && (<Notification toast={toast} />)}
       <Routes>
         <Route path = "/blog/:id" element={
           <Blog
