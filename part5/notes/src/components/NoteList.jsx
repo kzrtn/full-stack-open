@@ -84,7 +84,7 @@ const NoteList = ({ notes }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notes.map(note => (
+            {notesToShow.map(note => (
               <TableRow key={note.id}>
                 <TableCell>
                   <Link to={`/notes/${note.id}`}>
