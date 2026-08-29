@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Button, Card, CardContent, Typography } from '@mui/material'
 
 const Blog = (props) => {
   const [blog, setBlog] = useState(props.blog)
@@ -17,14 +18,7 @@ const Blog = (props) => {
     marginBottom: 5
   }
 
-  const addLike = () => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1
-    }
-    setBlog(updatedBlog)
-    props.updateService(updatedBlog)
-  }
+
 
   const deleteBlog = () => {
     const confirmDelete = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
@@ -41,25 +35,65 @@ const Blog = (props) => {
       <>
         {
           blog.user.id === props.user.id
-            ? <button onClick={deleteBlog}>remove</button>
+            ? <Button
+              size="small"
+              variant="outlined"
+              color="error"
+              onClick={deleteBlog}
+              sx={{ margin: '5px' }}
+            >
+              remove
+            </Button>
             : <></>
         }
       </>
     )
   }
 
+  const addLikeButton = () => {
+    const addLike = () => {
+      const updatedBlog = {
+        ...blog,
+        likes: blog.likes + 1
+      }
+      setBlog(updatedBlog)
+      props.updateService(updatedBlog)
+    }
+    return(
+      <Button
+        size="small"
+        variant="outlined"
+        sx={{ margin: '5px' }}
+        onClick={addLike}
+      >
+        like
+      </Button>
+    )
+  }
+
   return (
     <div data-testid="blog" style={blogStyle}>
-      <b>{blog.title}</b> By {blog.author}
-      <div><Link to={link}>{blog.url}</Link></div>
-      <div>
-        likes {blog.likes}
-        {props.user && (
-          <button onClick={addLike}>like</button>
-        )}
-      </div>
-      <div>Added by {blog.user.name}</div>
-      {props.user && removeButton()}
+      <Card variant="outlined">
+        <CardContent>
+          <Typography variant="h5" component="div">
+            <b>{blog.title}</b>
+          </Typography>
+          <Typography gutterBottom sx={{ color: 'text.secondary' }}>
+            By {blog.author}
+          </Typography>
+          <Typography>
+            <Link to={link}>{blog.url}</Link>
+          </Typography>
+          <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
+            Added by {blog.user.name}
+          </Typography>
+          <Typography variant="body1" component="span">
+            {blog.likes} likes
+          </Typography>
+          {props.user && addLikeButton()}
+          {props.user && removeButton()}
+        </CardContent>
+      </Card>
     </div>
   )
 }
