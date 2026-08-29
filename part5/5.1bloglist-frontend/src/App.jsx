@@ -3,6 +3,7 @@ import {
   Routes, Route, Link,
   useMatch
 } from 'react-router-dom'
+import CssBaseLine from '@mui/material/CssBaseline'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -112,6 +113,7 @@ const App = () => {
 
   return (
     <>
+      <CssBaseLine />
       <div>
         <Link style={padding} to="/">blogs</Link>
         {!user && (
