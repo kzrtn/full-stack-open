@@ -1,14 +1,10 @@
 import Dropdown from './Dropdown'
-import Notification from './Notification'
 import { Link } from 'react-router-dom'
 
-const BlogList = ({ blogs, setBlogs, toast }) => {
+const BlogList = ({ blogs, setBlogs }) => {
   return (
     <div>
       <h2>blogs</h2>
-      {toast.message && (
-        <Notification toast={toast} />
-      )}
       <div>
         <Dropdown blogs={blogs} setBlogs={setBlogs} />
         <ul>
