@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import noteService from './services/notes'
 
 import {
-  BrowserRouter as Router,
   Routes, Route, Link,
   useMatch
 } from 'react-router-dom'
+
+import { Container } from '@mui/material'
 
 import Home from './components/Home'
 import Footer from './components/Footer'
@@ -15,7 +16,7 @@ import NoteForm from './components/NoteForm'
 
 const App = () => { 
   const [notes, setNotes] = useState([])
-  //const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     noteService
@@ -72,7 +73,7 @@ const App = () => {
     : null
 
   return (
-    <>
+    <Container>
       <div>
         <Link style={padding} to="/">home</Link>
         <Link style={padding} to="/notes">notes</Link>
@@ -98,7 +99,7 @@ const App = () => {
         } />
       </Routes>
       <Footer />
-    </>
+    </Container>
   )
 }
 

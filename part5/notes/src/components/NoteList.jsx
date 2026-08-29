@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
 import Notification from './Notification'
 import LoginForm from './LoginForm'
 import Togglable from './Togglable'
@@ -22,29 +24,6 @@ const NoteList = ({ notes }) => {
   }, [])
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important == true)
-
-  const toggleImportanceOf = id => {
-    //const url = `http://localhost:3001/notes/${id}`
-    const note = notes.find(n => n.id === id)
-    const changedNote = {...note, important: !note.important}
-
-    noteService
-      .update(id, changedNote)
-      .then(returnedNote => {
-        //setNotes(notes.map(note => note.id === id ? returnedNote : note))
-      })
-      .catch(error => {
-        setErrorMessage(
-          `Note '${note.content}' was already deleted from the server: ${error}`
-        )
-        //Clears error message after 5 seconds
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        //Updates notes array to exclude the already deleted note
-        //setNotes(notes.filter(n => n.id !== id))
-      })
-  }
 
   const handleLogin = async (user) => {
     try {
@@ -95,13 +74,34 @@ const NoteList = ({ notes }) => {
           show {showAll ? 'important' : 'all'}
         </button>
       </div>
-      <ul>
-        {notesToShow.map(note =>
-          <li key={note.id}>
-            <Link to={`/notes/${note.id}`}>{note.content}</Link>
-          </li>
-        )}
-      </ul>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>content</TableCell>
+              <TableCell>user</TableCell>
+              <TableCell>important</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {notes.map(note => (
+              <TableRow key={note.id}>
+                <TableCell>
+                  <Link to={`/notes/${note.id}`}>
+                    {note.content}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  {note.user.name}
+                </TableCell>
+                <TableCell>
+                  {note.important ? 'yes' : ''}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
