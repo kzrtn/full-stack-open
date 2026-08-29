@@ -1,24 +1,80 @@
+import { useState, useId } from 'react'
+import {
+  Button,
+  Menu,
+  MenuList,
+  MenuItem,
+  ListItemText,
+  ListItemIcon
+} from '@mui/material'
+
+import { Check } from '@mui/icons-material'
+
 const Dropdown = ({ blogs, setBlogs }) => {
-  const changeSort = e => {
-    const selectedOption = e.target.value
-    switch (selectedOption) {
-    case 'likes':
+  const options = ['title', 'author', 'most likes']
+  const [checked, setChecked] = useState({
+    'most likes': true
+  })
+
+  const changeSort = option => {
+    handleClose()
+    setChecked({ [option]: true })
+    switch (option) {
+    case 'most likes':
       setBlogs(blogs.toSorted((a, b) => b.likes - a.likes))
       break
     default:
-      setBlogs(blogs.toSorted((a, b) => a[selectedOption].toUpperCase() < b[selectedOption].toUpperCase() ? -1 : 1))
+      setBlogs(blogs.toSorted((a, b) => a[option].toUpperCase() < b[option].toUpperCase() ? -1 : 1))
     }
   }
 
+  const id = useId()
+  const menuId = `${id}-menu`
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
   return (
-    <form onChange={changeSort}>
-      sort by:
-      <select name="sort" defaultValue="likes">
-        <option value="title">title</option>
-        <option value="author">author</option>
-        <option value="likes">most likes</option>
-      </select>
-    </form>
+    <>
+      <Button
+        variant="outlined"
+        aria-controls={open ? menuId : undefined}
+        aria-haspopup="true"
+        aria-expanded={open}
+        onClick={handleClick}
+      >
+        sort by
+      </Button>
+      <Menu
+        id={menuId}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuList>
+          {options.map(option => {
+            return (
+              <MenuItem
+                key={option}
+                role="menuitemcheckbox"
+                selected={Boolean(checked[option])}
+                onClick={() => changeSort(option)}
+              >
+                <ListItemIcon>
+                  {checked[option] ? <Check fontSize="small" /> : null}
+                </ListItemIcon>
+                <ListItemText>{option}</ListItemText>
+              </MenuItem>
+            )
+          })}
+        </MenuList>
+      </Menu>
+    </>
   )
 }
 
