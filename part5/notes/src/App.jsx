@@ -7,9 +7,26 @@ import {
 } from 'react-router-dom'
 
 import { Container } from '@mui/material'
+import styled from 'styled-components'
+
+const Page = styled.div`
+  padding: 1em;
+  background: papayawhip;
+`
+
+const Navigation = styled.div`
+  background: BurlyWood;
+  padding: 1em;
+`
+
+const Footer = styled.div`
+  background: Chocolate;
+  padding: 1em;
+  margin-top: 1em;
+`
 
 import Home from './components/Home'
-import Footer from './components/Footer'
+//import Footer from './components/Footer'
 import Note from './components/Note'
 import NoteList from './components/NoteList'
 import NoteForm from './components/NoteForm'
@@ -83,31 +100,35 @@ const App = () => {
 
   return (
     <Container>
-      <div>
-        <Link style={padding} to="/">home</Link>
-        <Link style={padding} to="/notes">notes</Link>
-        <Link style={padding} to="/create">new note</Link>
-      </div>
-      <Notification notification={notification} />
-      <Routes>
-        <Route path="/notes/:id" element={
-          <Note
-            note={note}
-            toggleImportanceOf={toggleImportanceOf}
-            deleteNote={deleteNote}
-          />
-        } />
-        <Route path="/notes" element={
-          <NoteList notes={notes} setNotification={setNotification} />
-        } />
-        <Route path="/create" element={
-          <NoteForm createNote={addNote} />
-        } />
-        <Route path="/" element={
-          <Home />
-        } />
-      </Routes>
-      <Footer />
+      <Page>
+        <Navigation>
+          <Link style={padding} to="/">home</Link>
+          <Link style={padding} to="/notes">notes</Link>
+          <Link style={padding} to="/create">new note</Link>
+        </Navigation>
+        <Notification notification={notification} />
+        <Routes>
+          <Route path="/notes/:id" element={
+            <Note
+              note={note}
+              toggleImportanceOf={toggleImportanceOf}
+              deleteNote={deleteNote}
+            />
+          } />
+          <Route path="/notes" element={
+            <NoteList notes={notes} setNotification={setNotification} />
+          } />
+          <Route path="/create" element={
+            <NoteForm createNote={addNote} />
+          } />
+          <Route path="/" element={
+            <Home />
+          } />
+        </Routes>
+        <Footer>
+          Note app, Department of Computer Science, University of Helsinki 2026
+        </Footer>
+      </Page>
     </Container>
   )
 }
