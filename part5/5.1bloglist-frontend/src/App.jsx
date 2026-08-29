@@ -3,6 +3,14 @@ import {
   Routes, Route, Link,
   useMatch
 } from 'react-router-dom'
+import { Container, AppBar, Button, Toolbar, Typography } from '@mui/material'
+import styled from 'styled-components'
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  padding: 5px;
+`
+
 import CssBaseLine from '@mui/material/CssBaseline'
 
 import blogService from './services/blogs'
@@ -104,28 +112,44 @@ const App = () => {
     }
   }
 
-  const padding = {
-    padding: 5
-  }
-
   const match = useMatch('/blog/:id')
   const blog = match ? blogs.find(b => b.id === match.params.id) : null
 
   return (
-    <>
+    <Container>
       <CssBaseLine />
-      <div>
-        <Link style={padding} to="/">blogs</Link>
-        {!user && (
-          <Link style={padding} to="/login">login</Link>
-        )}
-        {user && (
-          <Link style={padding} to="/create">new blog</Link>
-        )}
-        {user && (
-          <button onClick={logout}>logout</button>
-        )}
-      </div>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography sx={{ flexGrow: 1 }}>
+            Blog App
+          </Typography>
+          <Button color="inherit">
+            <StyledLink to="/">
+              blogs
+            </StyledLink>
+          </Button>
+          {!user && (
+            <Button color="inherit">
+              <StyledLink to="/login">
+                login
+              </StyledLink>
+            </Button>
+          )}
+          {user && (
+            <Button color="inherit">
+              <StyledLink to="/create">
+                new blog
+              </StyledLink>
+            </Button>
+
+          )}
+          {user && (
+            <Button color="inherit" onClick={logout}>
+              logout
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
       <Routes>
         <Route path = "/blog/:id" element={
           <Blog
@@ -156,7 +180,7 @@ const App = () => {
           />
         } />
       </Routes>
-    </>
+    </Container>
   )
 }
 
