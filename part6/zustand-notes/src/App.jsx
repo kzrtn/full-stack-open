@@ -1,19 +1,10 @@
-import { useNotes } from './store.js'
-import { useNoteActions } from './store.js'
-
+import NoteForm from './components/NoteForm.jsx'
+import NoteList from './components/NoteList.jsx'
 const App = () => {
-  const notes = useNotes()
-  const { add } = useNoteActions()
-
   return (
     <div>
-      <ul>
-        {notes.map(note => (
-          <li key={note.id}>
-            {note.important ? <strong>{note.content}</strong> : note.content}
-          </li>
-        ))}
-      </ul>
+      <NoteForm />
+      <NoteList />
     </div>
   )
 }

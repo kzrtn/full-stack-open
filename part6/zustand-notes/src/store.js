@@ -9,7 +9,10 @@ const useNoteStore = create(set => ({
     },
   ],
   actions: {
-    add: note => set(state => ({ notes: state.notes.concat(note) }))
+    add: note => set(state => ({ notes: state.notes.concat(note) })),
+    toggleImportance: noteId => set(state =>
+      ({ notes: state.notes.map(n => n.id === noteId ? { ...n, important: !n.important } : n)})
+    )
   }
 }))
 
