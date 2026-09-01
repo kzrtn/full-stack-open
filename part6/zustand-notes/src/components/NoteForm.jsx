@@ -1,15 +1,11 @@
 import { useNoteActions } from '../store'
-import noteService from '../services/notes'
 
 const NoteForm = () => {
   const { add } = useNoteActions()
-  const generateId = () => crypto.randomUUID()
 
-  const addNote = async (e) => {
+  const addNote = (e) => {
     e.preventDefault()
-    const content = e.target.note.value
-    const newNote = await noteService.createNew(content)
-    add(newNote)
+    add(e.target.note.value)
     e.target.reset()
   }
 

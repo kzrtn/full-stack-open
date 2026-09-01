@@ -19,6 +19,11 @@
       "content": "this is a test",
       "important": false,
       "id": "N30Poa1wOnU"
+    },
+    {
+      "content": "I enjoy using colemak-DH",
+      "important": true,
+      "id": "ESqahcv-08w"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
