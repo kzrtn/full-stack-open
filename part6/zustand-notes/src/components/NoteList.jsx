@@ -3,6 +3,7 @@ import Note from './Note.jsx'
 
 const NoteList = () => {
   const notes = useNotes()
+
   return (
     <ul>
       {notes.map(note => (
