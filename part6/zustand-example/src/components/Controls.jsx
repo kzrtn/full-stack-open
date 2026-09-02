@@ -1,4 +1,4 @@
-import { useCounterControls } from './store'
+import { useCounterControls } from '../store'
 
 const Controls = () => {
   const { increment, decrement, reset } = useCounterControls()
