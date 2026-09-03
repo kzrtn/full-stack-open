@@ -42,5 +42,7 @@ export const useNotes = () => {
   return notes
 }
 
+export default useNoteStore
+
 export const useNoteActions = () => useNoteStore(state => state.actions)
 export const useFilter = () => useNoteStore(state => state.filter)
