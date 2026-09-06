@@ -1,8 +1,8 @@
-const Controls = ({ counter, setCounter }) => {
-  const increment = () => setCounter(counter + 1)
-  const decrement = () => setCounter(counter - 1)
-  const zero = () => setCounter(0)
+import { useContext } from 'react'
+import CounterContext from './CounterContext'
 
+const Controls = () => {
+  const { increment, decrement, zero } = useContext(CounterContext)
   return (
     <div>
       <button onClick={increment}>plus</button>
