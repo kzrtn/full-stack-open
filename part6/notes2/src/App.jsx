@@ -1,17 +1,21 @@
-import { useQuery } from '@tanstack/react-query'
-import { getNotes } from './requests'
+import { mutationOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { getNotes, createNote, updateNote } from './requests'
 
 function App() {
-  const addNote = async (e) => {
-    e.preventDefault()
-    const content = e.target.note.value
-    e.target.reset()
-    console.log(content)
-  }
+  const queryClient = useQueryClient()
+  const newNoteMutation = useMutation({
+    mutationFn: createNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes']})
+    }
+  })
 
-  const toggleImportance = note => {
-    console.log('toggle importance of', note.id)
-  }
+  const updateNoteMutation = useMutation({
+    mutationFn: updateNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes']})
+    }
+  })
 
   const result = useQuery({
     queryKey: ['notes'],
@@ -25,6 +29,17 @@ function App() {
 
   const notes = result.data
 
+  const addNote = async (e) => {
+    e.preventDefault()
+    const content = e.target.note.value
+    e.target.reset()
+    newNoteMutation.mutate({ content, important: true })
+  }
+
+  const toggleImportance = note => {
+    updateNoteMutation.mutate({...note, important: !note.important})
+  }
+
   return (
     <div>
       <h2>Notes app</h2>
@@ -33,9 +48,9 @@ function App() {
         <button type='submit'>add</button>
       </form>
       {notes.map((note) => (
-        <li key={note.id} onClick={() => toggleImportance(note)}>
+        <li key={note.id}>
           {note.important ? <strong>{note.content}</strong> : note.content}
-          <button onClick={() => toggleImportance(note.id)}>
+          <button onClick={() => toggleImportance(note)}>
             {note.important ? 'make not important' : 'make important'}
           </button>
         </li>
