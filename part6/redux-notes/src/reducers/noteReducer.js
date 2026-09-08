@@ -15,4 +15,18 @@ const noteReducer = (state = [], action) => {
   }
 }
 
+export const createNote = content => ({
+  type: 'NEW_NOTE',
+  payload: {
+    content,
+    important: true,
+    id: crypto.randomUUID()
+  }
+})
+
+export const toggleImportanceOf = id => ({
+  type: 'TOGGLE_IMPORTANCE',
+  payload: { id }
+})
+
 export default noteReducer
