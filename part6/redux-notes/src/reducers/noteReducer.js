@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+/*
 const initialState = [
   {
     content: 'reducer defines how redux store works',
@@ -12,10 +13,11 @@ const initialState = [
     id: 2
   }
 ]
+  */
 
 const noteSlice = createSlice({
   name: 'notes',
-  initialState,
+  initialState: [],
   reducers: {
     createNote(state, action) {
       const content = action.payload
@@ -33,9 +35,12 @@ const noteSlice = createSlice({
         important: !noteToChange.important
       }
       return state.map(note => note.id === id ? changedNote : note)
+    },
+    setNotes(state, action) {
+      return action.payload
     }
   }
 })
 
-export const { createNote, toggleImportanceOf } = noteSlice.actions
+export const { createNote, toggleImportanceOf, setNotes } = noteSlice.actions
 export default noteSlice.reducer
