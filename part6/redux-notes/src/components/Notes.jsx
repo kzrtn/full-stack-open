@@ -1,20 +1,9 @@
 import Note from './Note'
-import noteServices from '../services/notes'
 
-import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { setNotes, toggleImportanceOf } from '../reducers/noteReducer'
+import { useSelector } from 'react-redux'
+import { toggleImportanceOf } from '../reducers/noteReducer'
 
 const Notes = () => {
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    const initNotes = async () => {
-      dispatch(setNotes(await noteServices.getAll()))
-    }
-    initNotes()
-  }, [dispatch])
-  
   const notes = useSelector(state => {
     if (state.filter === 'ALL') {
       return state.notes
