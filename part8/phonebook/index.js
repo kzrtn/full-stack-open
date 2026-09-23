@@ -33,6 +33,11 @@ const typeDefs = /* GraphQL */`
       street: String!
       city: String!
     ): Person
+
+    editNumber(
+      name: String!
+      phone: String!
+    ): Person
   }
   type Address {
     street: String!
@@ -95,6 +100,18 @@ const resolvers = {
       }
       persons = persons.concat(person)
       return person
+    },
+    editNumber: (root, args) => {
+      const person = person.find(p => p.nam === args.name)
+      if (!person) return null
+
+      const updatedPerson = {
+        ...person,
+        phone: args.phone
+      }
+
+      persons = persons.map(p => p.name === args.name ? updatedPerson : p)
+      return updatedPerson
     }
   }
 }
