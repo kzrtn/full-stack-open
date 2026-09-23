@@ -25,6 +25,14 @@ let persons = [
 ]
 
 const typeDefs = /* GraphQL */`
+  type Mutation {
+    addPerson(
+      name: String!
+      phone: String
+      street: String!
+      city: String!
+    ): Person
+  }
   type Address {
     street: String!
     city: String!
@@ -56,6 +64,16 @@ const resolvers = {
         street: street,
         city: city
       }
+    }
+  },
+  Mutation: {
+    addPerson: (root, args) => {
+      const person = {
+        ...args,
+        id: crypto.randomUUID()
+      }
+      persons = persons.concat(person)
+      return person
     }
   }
 }
