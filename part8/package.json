@@ -1,0 +1,16 @@
+{
+  "name": "part8",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"cd phonebook && npm run dev\" \"cd phonebook-frontend && npm run dev\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
