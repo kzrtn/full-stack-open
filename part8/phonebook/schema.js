@@ -8,6 +8,8 @@ const typeDefs = /* GraphQL */`
       city: String!
     ): Person
 
+    addAsFriend(name: String!): User
+
     editNumber(
       name: String!
       phone: String!

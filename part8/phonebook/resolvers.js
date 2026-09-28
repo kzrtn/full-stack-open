@@ -64,6 +64,31 @@ const resolvers = {
       }
       return person
     },
+    addAsFriend: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new GraphQLError('not authenticated', {
+          extensions: { code: 'UNAUTHENTICATED' }
+        })
+      }
+
+      const nonFriendAlready = (person) => !currentUser.friends.map(f => f._id.toString()).includes(person._id.toString())
+      const person = await Person.findOne({ name: args.name })
+      if (!person) {
+        throw new GraphQLError('Name not found', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        })
+      }
+
+      if (nonFriendAlready(person)) {
+        currentUser.friends = currentUser.friends.concat(person)
+      }
+
+      await currentUser.save()
+      return currentUser
+    },
     editNumber: async (root, args) => {
       const person = await Person.findOne({ name: args.name })
       if (!person) return null
