@@ -92,8 +92,7 @@ const resolvers = {
     editNumber: async (root, args) => {
       const person = await Person.findOne({ name: args.name })
       if (!person) return null
-
-      person.phone = args.phone
+      person.number = args.phone
       
       try {
         await person.save()
