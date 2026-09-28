@@ -16,7 +16,8 @@ const resolvers = {
         }
       })
     },
-    findPerson: (root, args) => Person.findOne({ name: args.name })
+    findPerson: (root, args) => Person.findOne({ name: args.name }),
+    me: (root, args, context) => context.currentUser
   },
   Person: {
     phone: (root) => root.number,
@@ -28,7 +29,15 @@ const resolvers = {
     }
   },
   Mutation: {
-    addPerson: async (root, args) => {
+    addPerson: async (root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser) {
+        throw new GraphQLError('not authenticated', {
+          extensions: {
+            code: 'UNAUTHENTICATED'
+          }
+        })
+      }
       const nameExists = await Person.exists({ name: args.name })
       if (nameExists) {
         throw new GraphQLError(`Name must be unique: ${args.name}`, {
@@ -42,6 +51,8 @@ const resolvers = {
 
       try {
         await person.save()
+        currentUser.friends = currentUser.friends.concat(person)
+        await currentUser.save()
       } catch (error) {
         throw new GraphQLError(`Saving person failed: ${error.message}`, {
           extensions: {
