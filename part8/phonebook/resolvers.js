@@ -1,7 +1,10 @@
 const { GraphQLError } = require('graphql')
+const { PubSub } = require('graphql-subscriptions')
 const jwt = require('jsonwebtoken')
 const Person = require('./models/person')
 const User = require('./models/user')
+
+const pubsub = new PubSub()
 
 const resolvers = {
   Query: {
@@ -62,6 +65,7 @@ const resolvers = {
           }
         })
       }
+      pubsub.publish('PERSON_ADDED', { personAdded: person })
       return person
     },
     addAsFriend: async (root, args, { currentUser }) => {
@@ -140,6 +144,11 @@ const resolvers = {
       return {
         value: jwt.sign(userForToken, process.env.JWT_SECRET)
       }
+    },
+  },
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubsub.asyncIterableIterator('PERSON_ADDED')
     }
   }
 }

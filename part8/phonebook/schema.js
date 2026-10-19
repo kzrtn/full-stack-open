@@ -1,5 +1,9 @@
 
 const typeDefs = /* GraphQL */`
+  type Subscription {
+    personAdded: Person!
+  }
+  
   type Mutation {
     addPerson(
       name: String!
