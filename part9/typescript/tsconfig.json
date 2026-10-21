@@ -1,6 +1,6 @@
 {
   "compilerOptions":{
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noEmit": true,
     "types": ["node", "express"],
     "noUnusedLocals": true,
