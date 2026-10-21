@@ -11,3 +11,7 @@ src/routes/diaries.d.ts
 src/routes/diaries.d.ts.map
 src/routes/diaries.js
 src/routes/diaries.js.map
+src/types.d.ts
+src/types.d.ts.map
+src/types.js
+src/types.js.map
