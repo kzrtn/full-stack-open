@@ -9,7 +9,7 @@
   "scripts": {
     "tsc": "tsc",
     "lint": "eslint .",
-    "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\"",
+    "dev": "concurrently \"tsc --watch\" \"cd src && node --watch  --experimental-transform-types index.ts index.ts\"",
     "start": "node index.ts --experimental-transform-types index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

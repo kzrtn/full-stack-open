@@ -3,3 +3,11 @@ index.d.ts
 index.d.ts.map
 index.js
 index.js.map
+src/services/diaryService.d.ts
+src/services/diaryService.d.ts.map
+src/services/diaryService.js
+src/services/diaryService.js.map
+src/routes/diaries.d.ts
+src/routes/diaries.d.ts.map
+src/routes/diaries.js
+src/routes/diaries.js.map
