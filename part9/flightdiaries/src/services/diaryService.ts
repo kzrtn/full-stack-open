@@ -1,5 +1,5 @@
 import diaryData from '../../data/entries.json' with { type: "json" };
-import type { DiaryEntry, NonSensitiveDiaryEntry } from '../types.ts';
+import type { DiaryEntry, NonSensitiveDiaryEntry, NewDiaryEntry } from '../types.ts';
 
 const diaries: DiaryEntry[] = diaryData as DiaryEntry[];
 
@@ -10,7 +10,7 @@ const getNonSensitiveEntries = (): NonSensitiveDiaryEntry[] => {
     weather,
     visibility,
   }));
-}
+};
 
 const getEntries = (): DiaryEntry[] => {
   return diaries;
@@ -19,10 +19,16 @@ const getEntries = (): DiaryEntry[] => {
 const findById = (id: number): DiaryEntry | undefined => {
   const entry = diaries.find(d => Number(d.id) === id);
   return entry;
-}
+};
 
-const addDiary = () => {
-  return null;
+const addDiary = (entry: NewDiaryEntry): DiaryEntry => {
+  const newDiaryEntry = {
+    id: Math.max(...diaries.map(d=>d.id)) + 1,
+    ...entry
+  };
+
+  diaries.push(newDiaryEntry);
+  return newDiaryEntry;
 };
 
 export default {

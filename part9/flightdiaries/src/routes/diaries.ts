@@ -17,10 +17,19 @@ router.get('/:id', (req, res) => {
   } else {
     res.status(404);
   }
-})
+});
 
-router.post('/', (_req, res) => {
-  res.send('Saving a diary!');
+router.post('/', (req, res) => {
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+  const { date, weather, visibility, comment } = req.body;
+  const addedEntry = diaryService.addDiary({
+    date,
+    weather,
+    visibility,
+    comment
+  });
+
+  res.json(addedEntry);
 });
 
 export default router;
