@@ -1,6 +1,14 @@
 import { type NewDiaryEntry, Visibility, Weather } from '../types.ts';
 
 export const parseNewDiaryEntry = (object: unknown): NewDiaryEntry => {
+  if (!object || typeof object !== 'object') {
+    throw new Error('Incorrect or missing data');
+  }
+
+  if (!('comment' in object && 'date' in object && 'weather' in object && 'visibility' in object)) {
+    throw new Error('Incorrect data: some fields are missing');
+  }
+  
   const newEntry: NewDiaryEntry = {
     comment: parseComment(object.comment),
     date: parseDate(object.date),
