@@ -24,7 +24,7 @@ export const NewEntrySchema = z.object({
   visibility: z.enum(Visibility),
   date: z.iso.date(),
   comment: z.string().optional()
-})
+});
 
 // infer the type from schema
 export type NewDiaryEntry = z.infer<typeof NewEntrySchema>;

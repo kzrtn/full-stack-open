@@ -12,7 +12,7 @@ const errorMiddleware = (error: unknown, _req: Request, res: Response, next: Nex
   } else {
     next(error);
   }
-}
+};
 
 router.get('/', (_req, res: Response<NonSensitiveDiaryEntry[]>) => {
   const data = diaryService.getNonSensitiveEntries();

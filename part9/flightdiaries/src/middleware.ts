@@ -1,4 +1,4 @@
-import express, { type Request, type Response, type NextFunction } from 'express';
+import { type Request, type Response, type NextFunction } from 'express';
 import { NewEntrySchema } from './types.ts';
 
 export const newDiaryParser = (req: Request, _res: Response, next: NextFunction) => {
