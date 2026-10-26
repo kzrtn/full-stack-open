@@ -26,14 +26,6 @@ export const NewEntrySchema = z.object({
   comment: z.string().optional()
 })
 
-export interface DiaryEntry {
-  id: number;
-  date: string;
-  weather: Weather;
-  visibility: Visibility;
-  comment?: string;
-};
-
 // infer the type from schema
 export type NewDiaryEntry = z.infer<typeof NewEntrySchema>;
 
