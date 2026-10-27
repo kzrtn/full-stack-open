@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 interface Note {
   id: string,
@@ -7,6 +8,14 @@ interface Note {
 
 function App() {
   const [newNote, setNewNote] = useState('');
+
+  useEffect(() => {
+    axios.get('https://localhost:3001/notes')
+    .then(res => {
+      setNotes(res.data);
+    })
+  }, []);
+
   const [notes, setNotes] = useState<Note[]>([
     {
       id: '1',
