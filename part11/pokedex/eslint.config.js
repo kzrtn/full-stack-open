@@ -15,6 +15,24 @@ module.exports = [
   },
   js.configs.recommended,
   {
+    files: ['e2e-tests/*.spec.{js,jsx}', 'playwright.config.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
+    files: ['playwright.config.js'],
+    languageOptions: {
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
     files: ['jest.setup.js'],
     languageOptions: {
       sourceType: 'commonjs',

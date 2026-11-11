@@ -2,6 +2,10 @@ const { test, describe, expect, beforeEach } = require('@playwright/test')
 
 const baseUrl = 'http://localhost:8080'
 
+beforeEach(() => {
+  console.log('nothing here')
+})
+
 describe('Pokedex', () => {
   test('front page can be opened', async ({ page }) => {
     await page.goto(baseUrl)
